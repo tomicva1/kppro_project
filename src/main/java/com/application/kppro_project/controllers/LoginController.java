@@ -2,6 +2,7 @@ package com.application.kppro_project.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.unbescape.html.HtmlEscape;
 
@@ -10,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class LoginController {
 
-    // Login form
+    /*// Login form
     @RequestMapping("/login.html")
     public String login() {
         return "login.html";
@@ -38,8 +39,22 @@ public class LoginController {
         return "error";
     }
 
+    /*@GetMapping("/login.html")
+    public String showMyLoginPage() {
+
+        // return "plain-login";
+
+        return "login.html";
+
+    }*/
+
+    @GetMapping("/login.html")
+    public String login(){
+        return "login";
+    }
+
     /** Error page. */
-    @RequestMapping("/403.html")
+    @GetMapping("/403.html")
     public String forbidden() {
         return "403";
     }
