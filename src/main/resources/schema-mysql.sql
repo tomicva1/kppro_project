@@ -19,15 +19,20 @@ CREATE TABLE `employee` (
                             address varchar(255) not null,
                             city varchar(255) not null,
                             hire_date date null,
-                            telephone varchar(255) null,
-  PRIMARY KEY (`username`)
+                            telephone varchar(255) null
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Inserting data for table `users`
+-- Inserting data for table `employee`
 --
 
 INSERT INTO `employee`
 VALUES
-('Jan', 'Novak','contractor1','$2a$12$QCZNsJTN7pDHl.ytUZixaONiI4VC0x/N75Fny/jXWhhOYUD5Nb0cu','USER','bydliste 10','bydliste','2020-01-17', 122333444);
+(1,'Jan', 'Novak','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user1','bydliste 10','bydliste','2020-01-17', 122333444),
+(2,'Jan', 'Novak','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user2','bydliste 10','bydliste','2020-01-17', 122333444),
+(3,'Jan', 'Novak','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user3','bydliste 10','bydliste','2020-01-17', 122333444),
+(4,'Jan', 'Novak','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user4','bydliste 10','bydliste','2020-01-17', 122333444),
+(5,'Jan', 'Novak','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user5','bydliste 10','bydliste','2020-01-17', 122333444),
+(6,'Jan', 'Novak','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user6','bydliste 10','bydliste','2020-01-17', 122333444);
+
 

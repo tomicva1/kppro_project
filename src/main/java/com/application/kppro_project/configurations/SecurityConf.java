@@ -28,13 +28,10 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/").authenticated()
-                .antMatchers("/user/**").hasAnyRole("USER","MANAGER")
+                .antMatchers("/user/index.html").hasAnyRole("USER","MANAGER")
                 .antMatchers("/manager/**").hasRole("MANAGER")
                 .and()
                 .formLogin().permitAll()
-               /*  .antMatchers("/manager/index.html").hasRole("MANAGER")
-                 .antMatchers("/validator/index.html").hasRole("VALIDATOR")
-                 .antMatchers("/contractor/index.html").hasRole("CONTRACTOR")*/
                 .and()
                 .logout();
     }

@@ -19,9 +19,9 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Optional <Employee> optionalContractor = Optional.ofNullable(personService.findEmployeeByUsername(userName));
-        if(optionalContractor.isPresent()) {
-            return new  MyUser(optionalContractor.get().getUsername(), optionalContractor.get().getPassword(), optionalContractor.get().getRole() ,optionalContractor.get().getId());
+        Optional <Employee> optionalEmployee = Optional.ofNullable(personService.findEmployeeByUsername(userName));
+        if(optionalEmployee.isPresent()) {
+            return new  MyUser(optionalEmployee.get().getUsername(), optionalEmployee.get().getPassword(), optionalEmployee.get().getRole() ,optionalEmployee.get().getId());
         }
         return null;
     }
