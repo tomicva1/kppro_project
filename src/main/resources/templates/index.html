@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 
-<html  xmlns:th="https://www.thymeleaf.org"
+<html  layout:decorate="~{layout}"
+       xmlns:th="https://www.thymeleaf.org"
        xmlns:layout="https://www.ultraq.net.nz/thymeleaf/layout"
        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <title>Dovolenkovy system</title>
 </head>
 <body>
-    <h1>Test</h1>
-    <a href="user\index.html">Go to user</a>
+    <div layout:fragment="content">
+        <p></p>
+        <h2 class="text-center">Dovolenkový systém</h2>
+        <p></p>
+    </div>
 </body>
 </html>
