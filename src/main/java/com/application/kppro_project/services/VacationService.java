@@ -15,9 +15,9 @@ public class VacationService {
     @Autowired
     private VacationRepo vacationRepo;
 
-    public Collection<Vacation> findAllVacation(){
+    public Collection<Vacation> findAllVacationForEmployee(int id){
         List<Vacation> vacation = new ArrayList<Vacation>();
-        for(Vacation vac : vacationRepo.findAll()){
+        for(Vacation vac : vacationRepo.findVacationById(id)){
             vacation.add(vac);
         }
         return vacation;

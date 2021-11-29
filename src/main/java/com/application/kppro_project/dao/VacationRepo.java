@@ -9,7 +9,7 @@ public interface VacationRepo extends CrudRepository <Vacation, Integer> {
 
     //List<Vacation> findVacationByEmployeeId(int id);
     //List<Vacation> findVacationByManagerId(int id);
-
+    List<Vacation> findVacationById(int id);
 
     void deleteById(int id);
 }
