@@ -1,80 +1,90 @@
 package com.application.kppro_project.models;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Objects;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-import java.time.LocalDate;
-
-/**
- * Trida objektu Contractor
- */
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
-@Table(name = "employee")
-public class Employee extends User {
+public class Employee {
 
-    @Column(name = "hire_date")
-    @NotNull(message = "Set hire date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate hireDate;
+    private @Id @GeneratedValue Long id;
+    private String firstName;
+    private String lastName;
+    private String role;
 
-    @Column(name = "address")
-    @NotEmpty(message = "Set contractors address")
-    private String address;
+    public Employee() {}
 
-    @Column(name = "city")
-    @NotEmpty(message = "Set contractors city")
-    private String city;
+    public Employee(String firstName, String lastName, String role) {
 
-    @Column(name = "telephone")
-    @NotEmpty
-    @Min(value = 100000000, message = "Set real phone number, format: xxxxxxxxx")
-    @Max(value = 999999999)
-    private String telephone;
-
-    // constructors
-    public Employee() {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
     }
 
-    public Employee(@NotNull LocalDate hireDate, @NotEmpty(message = "Set contractors address") String address, @NotEmpty(message = "Set contractors address") String city, @Min(value = 100000000, message = "Set real phone number") @Max(value = 999999999, message = "Set real phone number") String telephone) {
-        this.hireDate = hireDate;
-        this.address = address;
-        this.city = city;
-        this.telephone = telephone;
+    public String getName() {
+        return this.firstName + " " + this.lastName;
     }
 
-    @Transient
-    public LocalDate getHireDate() {
-        return hireDate;
+    public void setName(String name) {
+        String[] parts = name.split(" ");
+        this.firstName = parts[0];
+        this.lastName = parts[1];
     }
 
-    public void setHireDate(LocalDate hireDate) {
-        this.hireDate = hireDate;
+    public Long getId() {
+        return this.id;
     }
 
-    public String getAddress() {
-        return address;
+    public String getFirstName() {
+        return this.firstName;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public String getLastName() {
+        return this.lastName;
     }
 
-    public String getCity() {
-        return city;
+    public String getRole() {
+        return this.role;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getTelephone() {
-        return telephone;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o)
+            return true;
+        if (!(o instanceof Employee))
+            return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(this.id, employee.id) && Objects.equals(this.firstName, employee.firstName)
+                && Objects.equals(this.lastName, employee.lastName) && Objects.equals(this.role, employee.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id, this.firstName, this.lastName, this.role);
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" + "id=" + this.id + ", firstName='" + this.firstName + '\'' + ", lastName='" + this.lastName
+                + '\'' + ", role='" + this.role + '\'' + '}';
+    }
 }
