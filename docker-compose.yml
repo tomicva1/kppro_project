@@ -7,13 +7,13 @@ services:
   # Database Service (MariaDB)
   database:
     image: mariadb:latest
-    container_name: localhost
+    container_name: mariaDB
     ports:
       - "3306:3306"
     restart: always
     environment:
       MYSQL_DATABASE: kppro_dovolena
-      MYSQL_USER: root
+      MYSQL_USER: user
       MYSQL_PASSWORD: my-secret-pw
       MYSQL_ROOT_PASSWORD: my-secret-pw
 
