@@ -15,28 +15,45 @@ CREATE TABLE `employee` (
                             last_name varchar(255) not null,
                             username varchar(255) not null,
                             password varchar(255) not null,
-                            role varchar(255) not null,
-                            address varchar(255) not null,
-                            city varchar(255) not null,
-                            hire_date date null,
-                            telephone varchar(255) null
+                            role varchar(255) not null
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS `vacation`;
 CREATE TABLE `vacation` (
                             id int auto_increment
                                 primary key,
-                            employee_id date not null,
-                            start_date date not null,
-                            end_date date not null,
+                            employee_id int not null,
+                            dateFrom date not null,
+                            dateTo date not null,
+                            note varchar(255) null,
                             approved boolean not null,
-                            approvedBy varchar(255) null,
-                            approval_time date null
+                            approvedBy int null,
+                            approvalTime date null
 ) ENGINE=MyISAM;
 
 create index FK6qrwq18c5kq468gvsmwm43cgp
     on vacation (employee_id);
 
+DROP TABLE IF EXISTS `department`;
+CREATE TABLE `department` (
+                            id int auto_increment
+                                primary key,
+                            map int null,
+                            description varchar(255) null,
+                            name varchar(255) not null
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS `feedback`;
+CREATE TABLE `feedback` (
+                              id int auto_increment
+                                  primary key,
+                              quality int not null,
+                              note varchar(255) not null,
+                              employee_id int not null
+) ENGINE=MyISAM;
+
+create index FK6qrwq18c5kq468gvsmwm43cgp
+    on feedback (employee_id);
 
 
 --
