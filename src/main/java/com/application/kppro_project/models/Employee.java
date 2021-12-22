@@ -1,5 +1,7 @@
 package com.application.kppro_project.models;
 
+import org.springframework.hateoas.Link;
+
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -15,6 +17,7 @@ public class Employee {
     private String role;
     private String username;
     private String password;
+    private String token;
 
     public Employee() {}
 
@@ -110,6 +113,22 @@ public class Employee {
                 ", role='" + role + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", token='" + token + '\'' +
                 '}';
+    }
+
+    public String toStringLogin(){
+        return '{' +
+                "username=\"" + username + '"' +
+                ", token=\"" + token + '"' +
+                '}';
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
     }
 }
