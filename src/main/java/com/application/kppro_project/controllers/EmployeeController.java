@@ -4,7 +4,7 @@ package com.application.kppro_project.controllers;
 import com.application.kppro_project.dao.EmployeeRepository;
 import com.application.kppro_project.models.Employee;
 import com.application.kppro_project.models.EmployeeModelAssembler;
-import com.application.kppro_project.other.EmployeeNotFoundException;
+import com.application.kppro_project.other.NotFoundException;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -33,9 +33,14 @@ public class EmployeeController {
         this.assembler = assembler;
     }
 
+    @GetMapping("login")
+    public String login() {
+        return "Logged";
+    }
+
     // Aggregate root
     // tag::get-aggregate-root[]
-    @GetMapping("/manager/employees")
+    @GetMapping("/employees")
     public CollectionModel<EntityModel<Employee>> all() {
 
         List<EntityModel<Employee>> employees = repository.findAll().stream() //
@@ -44,6 +49,18 @@ public class EmployeeController {
 
         return CollectionModel.of(employees, linkTo(methodOn(EmployeeController.class).all()).withSelfRel());
     }
+
+    // Single item
+    @GetMapping("/employees/{id}")
+    public EntityModel<Employee> one(@PathVariable Long id) {
+
+        Employee employee = repository.findById(id) //
+                .orElseThrow(() -> new NotFoundException(id));
+
+        return assembler.toModel(employee);
+    }
+
+
     // end::get-aggregate-root[]
     @PostMapping("/employees")
     ResponseEntity<?> newEmployee(@RequestBody Employee newEmployee) {
@@ -53,22 +70,6 @@ public class EmployeeController {
         return ResponseEntity //
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
                 .body(entityModel);
-    }
-
-    @GetMapping("login")
-    public String login() {
-        return "Logged";
-    }
-
-    // Single item
-
-    @GetMapping("/employees/{id}")
-    public EntityModel<Employee> one(@PathVariable Long id) {
-
-        Employee employee = repository.findById(id) //
-                .orElseThrow(() -> new EmployeeNotFoundException(id));
-
-        return assembler.toModel(employee);
     }
 
     @PutMapping("/employees/{id}")

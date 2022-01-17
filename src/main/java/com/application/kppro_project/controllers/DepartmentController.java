@@ -3,12 +3,12 @@ package com.application.kppro_project.controllers;
 import com.application.kppro_project.dao.DepartmentRepository;
 import com.application.kppro_project.models.Department;
 import com.application.kppro_project.models.DepartmentModelAssembler;
-import com.application.kppro_project.other.EmployeeNotFoundException;
+import com.application.kppro_project.other.NotFoundException;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,15 +27,6 @@ public class DepartmentController {
         this.assembler = assembler;
     }
 
-    @GetMapping("/department/{id}")
-    public EntityModel<Department> one(@PathVariable Long id) {
-
-        Department department = repository.findById(id) //
-                .orElseThrow(() -> new EmployeeNotFoundException(id));
-
-        return assembler.toModel(department);
-    }
-
     @GetMapping("/department")
     public CollectionModel<EntityModel<Department>> all() {
 
@@ -44,6 +35,47 @@ public class DepartmentController {
                 .collect(Collectors.toList());
 
         return CollectionModel.of(department, linkTo(methodOn(DepartmentController.class).all()).withSelfRel());
+    }
+
+    @GetMapping("/department/{id}")
+    public EntityModel<Department> one(@PathVariable Long id) {
+
+        Department department = repository.findById(id) //
+                .orElseThrow(() -> new NotFoundException(id));
+
+        return assembler.toModel(department);
+    }
+
+    // end::get-aggregate-root[]
+    @PostMapping("/department")
+    ResponseEntity<?> newDepartment(@RequestBody Department newDepartment) {
+
+        EntityModel<Department> entityModel = assembler.toModel(repository.save(newDepartment));
+
+        return ResponseEntity //
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
+                .body(entityModel);
+    }
+
+    @PutMapping("/department/{id}")
+    public Department replaceDepartment(@RequestBody Department newDepartment, @PathVariable Long id) {
+
+        return repository.findById(id)
+                .map(department -> {
+                    department.setName(newDepartment.getName());
+                    department.setDescription(newDepartment.getDescription());
+                    department.setMap(newDepartment.getMap());
+                    return repository.save(department);
+                })
+                .orElseGet(() -> {
+                    newDepartment.setId(id);
+                    return repository.save(newDepartment);
+                });
+    }
+
+    @DeleteMapping("/department/{id}")
+    void deleteDepartment(@PathVariable Long id) {
+        repository.deleteById(id);
     }
 
 

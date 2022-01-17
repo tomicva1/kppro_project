@@ -2,7 +2,7 @@ package com.application.kppro_project.models;
 
 import com.application.kppro_project.controllers.EmployeeController;
 import com.application.kppro_project.dao.EmployeeRepository;
-import com.application.kppro_project.other.EmployeeNotFoundException;
+import com.application.kppro_project.other.NotFoundException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.aspectj.weaver.ast.Call;
@@ -56,7 +56,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
 
     public boolean checkAuthentification(String username, String pwd) {
         Employee employee = (Employee) repository.findByUsername(username) //
-                .orElseThrow(() -> new EmployeeNotFoundException(username));
+                .orElseThrow(() -> new NotFoundException(username));
 
         boolean login = pwdMatch(employee.getPassword(), pwd);
         if(login) {

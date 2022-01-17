@@ -43,6 +43,8 @@ public class Vacation {
         return this.id;
     }
 
+    public void setId(Long id) { this.id = id; }
+
     public Long getEmployee_id() {
         return employee_id;
     }
@@ -99,7 +101,18 @@ public class Vacation {
         this.approvalTime = approvalTime;
     }
 
-    public void setVacation() {
+    public void setVacation(Vacation vacation) {
+        this.employee_id = vacation.getEmployee_id();
+        this.dateFrom = vacation.getDateFrom();
+        this.dateTo = vacation.getDateTo();
+        this.note = vacation.getNote();
+        this.approved = vacation.approved;
+    }
+
+    public void setApprove(boolean approved, Long approvedBy, Date approvalTime){
+        this.approved = approved;
+        this.approvedBy = approvedBy;
+        this.approvalTime = approvalTime;
     }
 
     @Override
