@@ -33,9 +33,8 @@ public class EmployeeController {
         this.assembler = assembler;
     }
 
-    @GetMapping("login")
-    public String login() {
-        return "Logged";
+    @PostMapping("login")
+    public void login() {
     }
 
     // Aggregate root
