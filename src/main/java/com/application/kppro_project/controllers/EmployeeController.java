@@ -5,15 +5,12 @@ import com.application.kppro_project.dao.EmployeeRepository;
 import com.application.kppro_project.models.Employee;
 import com.application.kppro_project.models.EmployeeModelAssembler;
 import com.application.kppro_project.other.EmployeeNotFoundException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -38,7 +35,7 @@ public class EmployeeController {
 
     // Aggregate root
     // tag::get-aggregate-root[]
-    @GetMapping("/employees")
+    @GetMapping("/manager/employees")
     public CollectionModel<EntityModel<Employee>> all() {
 
         List<EntityModel<Employee>> employees = repository.findAll().stream() //
@@ -58,23 +55,9 @@ public class EmployeeController {
                 .body(entityModel);
     }
 
-    @PostMapping("login")
-    public String login(@RequestParam("username") String username, @RequestParam("password") String pwd) {
-        Employee employee = (Employee) repository.findByUsername(username) //
-                .orElseThrow(() -> new EmployeeNotFoundException(username));
-
-        boolean login = pwdMatch(employee.getPassword(), pwd);
-        if(login) {
-            String token = getJWTToken(username);
-            Employee user = new Employee();
-            user.setUsername(username);
-            user.setToken(token);
-
-            return user.toStringLogin();
-        }
-        else{
-            return null;
-        }
+    @GetMapping("login")
+    public String login() {
+        return "Logged";
     }
 
     // Single item
@@ -106,32 +89,5 @@ public class EmployeeController {
     @DeleteMapping("/employees/{id}")
     void deleteEmployee(@PathVariable Long id) {
         repository.deleteById(id);
-    }
-
-    private String getJWTToken(String username) {
-        String secretKey = "mySecretKey";
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList("ROLE_USER");
-
-        String token = Jwts
-                .builder()
-                .setId("softtekJWT")
-                .setSubject(username)
-                .claim("authorities",
-                        grantedAuthorities.stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .collect(Collectors.toList()))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000))
-                .signWith(SignatureAlgorithm.HS512,
-                        secretKey.getBytes()).compact();
-
-        return "Bearer " + token;
-    }
-
-    private boolean pwdMatch(String userPwd, String pwd){
-        BCryptPasswordEncoder b = new BCryptPasswordEncoder();
-
-        return b.matches(pwd, userPwd);
     }
 }
