@@ -13,9 +13,9 @@ CREATE TABLE `employee` (
                                 primary key,
                             first_name varchar(255) not null,
                             last_name varchar(255) not null,
-                            username varchar(255) not null,
                             password varchar(255) not null,
-                            role varchar(255) not null
+                            role varchar(255) not null,
+                            username varchar(255) not null
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS `vacation`;
