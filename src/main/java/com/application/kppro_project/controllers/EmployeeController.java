@@ -133,7 +133,7 @@ public class EmployeeController {
                 .signWith(SignatureAlgorithm.HS512,
                         secretKey.getBytes()).compact();
 
-        return "Bearer " + token;
+        return token;
     }
 
     private static boolean pwdMatch(String userPwd, String pwd){
