@@ -41,13 +41,13 @@ public class EmployeeController {
     }
 
     @PostMapping("login")
-    public String login(@RequestParam("username") String username, @RequestParam("password") String pwd) {
-        Employee employee = (Employee) repository.findByUsername(username) //
-                .orElseThrow(() -> new NotFoundException(username));
+    public String login(@RequestBody Employee body) {
+        Employee employee = (Employee) repository.findByUsername(body.getUsername()) //
+                .orElseThrow(() -> new NotFoundException(body.getUsername()));
 
-        boolean login = pwdMatch(employee.getPassword(), pwd);
+        boolean login = pwdMatch(employee.getPassword(), body.getPassword());
         if(login) {
-            String token = getJWTToken(username);
+            String token = getJWTToken(body.getUsername());
             Employee user = employee;
             user.setToken(token);
 

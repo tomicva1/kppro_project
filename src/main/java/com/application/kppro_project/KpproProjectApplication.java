@@ -13,7 +13,7 @@ public class KpproProjectApplication {
         SpringApplication.run(KpproProjectApplication.class, args);
     }
 
-    /*@Bean
+    @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -21,6 +21,6 @@ public class KpproProjectApplication {
                 registry.addMapping("/**").allowedOrigins("http://localhost:4200/");
             }
         };
-    }*/
+    }
 
 }
