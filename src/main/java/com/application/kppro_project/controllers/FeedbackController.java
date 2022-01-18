@@ -10,6 +10,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,7 +54,6 @@ public class FeedbackController {
     // end::get-aggregate-root[]
     @PostMapping("/feedback")
     ResponseEntity<?> newFeedback(@RequestBody Feedback newFeedback) {
-
         EntityModel<Feedback> entityModel = assembler.toModel(repository.save(newFeedback));
 
         return ResponseEntity //

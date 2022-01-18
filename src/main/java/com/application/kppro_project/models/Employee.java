@@ -17,14 +17,18 @@ public class Employee {
     private String role;
     private String username;
     private String password;
+    private int department_id;
+    private String token;
 
     public Employee() {}
 
-    public Employee(String firstName, String lastName, String role) {
+    public Employee(String firstName, String lastName, String username, String role, int department_id) {
 
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
+        this.username = username;
+        this.department_id = department_id;
     }
 
     public String getName() {
@@ -85,6 +89,14 @@ public class Employee {
         this.password = password;
     }
 
+    public int getDepartment_id() {
+        return department_id;
+    }
+
+    public void setDepartment_id(int department_id) {
+        this.department_id = department_id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,12 +107,13 @@ public class Employee {
                 Objects.equals(lastName, employee.lastName) &&
                 Objects.equals(role, employee.role) &&
                 Objects.equals(username, employee.username) &&
-                Objects.equals(password, employee.password);
+                Objects.equals(password, employee.password) &&
+                Objects.equals(department_id, employee.department_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, role, username, password);
+        return Objects.hash(id, firstName, lastName, role, username, password, department_id);
     }
 
     @Override
@@ -112,6 +125,18 @@ public class Employee {
                 ", role='" + role + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", department_id='" + department_id + '\'' +
+                '}';
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String toStringLogin(){
+        return '{' +
+                "username=\"" + username + '"' +
+                ", token=\"" + token + '"' +
                 '}';
     }
 }
