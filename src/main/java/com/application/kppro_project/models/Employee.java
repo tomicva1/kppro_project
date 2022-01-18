@@ -135,8 +135,8 @@ public class Employee {
 
     public String toStringLogin(){
         return '{' +
-                "userId=\"" + id + '"' +
-                ", token=\"" + token + '"' +
+                "\"userId\":\"" + id + '"' +
+                ", \"token\":\"" + token + '"' +
                 '}';
     }
 }
