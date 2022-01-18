@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "vacation")
+//@Table(name = "vacation")
 public class Vacation {
 
     private @Id @GeneratedValue Long id;

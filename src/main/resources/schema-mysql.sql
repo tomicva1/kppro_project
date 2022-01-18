@@ -30,12 +30,12 @@ CREATE TABLE `vacation` (
                             id int auto_increment
                                 primary key,
                             employee_id int not null,
-                            dateFrom date not null,
-                            dateTo date not null,
+                            date_from date not null,
+                            date_to date not null,
                             note varchar(255) null,
                             approved boolean not null,
-                            approvedBy int null,
-                            approvalTime date null
+                            approved_by int null,
+                            approval_time date null
 ) ENGINE=MyISAM;
 
 create index FK6qrwq18c5kq468gvsmwm43cgp
@@ -70,8 +70,8 @@ create index FK6qrwq18c5kq468gvsmwm43cgp
 
 INSERT INTO `department`
 VALUES
-(1,null, 'Vývojové oddělení', 'DEV'),
-(2,null,'Produkťáci', 'PROD');
+(1,123, 'Vývojové oddělení', 'DEV'),
+(2,123,'Produkťáci', 'PROD');
 
 INSERT INTO `employee`
 VALUES

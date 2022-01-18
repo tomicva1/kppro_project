@@ -13,9 +13,9 @@ public class VacationModelAssembler implements RepresentationModelAssembler<Vaca
 
     @Override
     public EntityModel<Vacation> toModel(Vacation vacation) {
-        EntityModel<Vacation> vacationModel = EntityModel.of(vacation,
+        return EntityModel.of(vacation,
                 linkTo(methodOn(VacationController.class).one(vacation.getId())).withSelfRel(),
-                linkTo(methodOn(VacationController.class).all()).withRel("vacation"));        return null;
+                linkTo(methodOn(VacationController.class).all()).withRel("vacation"));
     }
 
     @Override
