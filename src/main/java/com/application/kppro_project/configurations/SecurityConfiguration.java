@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.Filter;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -23,14 +24,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-        corsConfiguration.setAllowedOrigins(List.of("*"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200/"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setExposedHeaders(List.of("Authorization"));
 
         http.cors().configurationSource(request -> corsConfiguration).and().csrf().disable()
                 .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests().antMatchers(HttpMethod.POST, "/login").permitAll().anyRequest().authenticated();
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/login").permitAll()
+                .anyRequest().authenticated();
     }
 
     /*@Autowired
