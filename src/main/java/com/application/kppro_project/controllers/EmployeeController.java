@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 public class EmployeeController {
 
-    private final EmployeeRepository repository;
+    public final EmployeeRepository repository;
 
     private final EmployeeModelAssembler assembler;
 
@@ -75,7 +76,6 @@ public class EmployeeController {
     // Single item
     @GetMapping("/employees/{id}")
     public EntityModel<Employee> one(@PathVariable Long id) {
-
         Employee employee = repository.findById(id) //
                 .orElseThrow(() -> new NotFoundException(id));
 

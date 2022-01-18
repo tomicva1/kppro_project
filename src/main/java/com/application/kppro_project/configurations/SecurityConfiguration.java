@@ -1,11 +1,17 @@
 package com.application.kppro_project.configurations;
 
+import com.application.kppro_project.dao.EmployeeRepository;
+import com.application.kppro_project.models.Employee;
+import com.application.kppro_project.security.JWTAuthorizationFilter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import javax.servlet.Filter;
 import java.util.List;
 
 @Configuration
@@ -22,7 +28,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setExposedHeaders(List.of("Authorization"));
 
-        http.cors().configurationSource(request -> corsConfiguration).and().requestMatchers().antMatchers("/");
+        http.cors().configurationSource(request -> corsConfiguration).and().csrf().disable()
+                .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/login").permitAll().anyRequest().authenticated();
     }
 
     /*@Autowired

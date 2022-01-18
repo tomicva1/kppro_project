@@ -7,6 +7,11 @@ USE `kppro_dovolena`;
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `hibernate_sequence`;
+CREATE TABLE `hibernate_sequence` (
+    next_val bigint(20) null
+) ENGINE=MyISAM;
+
 DROP TABLE IF EXISTS `employee`;
 CREATE TABLE `employee` (
                             id int auto_increment

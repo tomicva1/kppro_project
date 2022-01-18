@@ -28,7 +28,7 @@ public class VacationController {
         this.assembler = assembler;
     }
 
-    @GetMapping("/vacation")
+    @GetMapping("/vacations")
     public CollectionModel<EntityModel<Vacation>> all() {
 
         List<EntityModel<Vacation>> vacation = repository.findAll().stream() //
@@ -38,7 +38,7 @@ public class VacationController {
         return CollectionModel.of(vacation, linkTo(methodOn(EmployeeController.class).all()).withSelfRel());
     }
 
-    @GetMapping("/vacation/{id}")
+    @GetMapping("/vacations/{id}")
     public EntityModel<Vacation> one(@PathVariable Long id) {
 
         Vacation vacation = repository.findById(id) //
@@ -47,7 +47,7 @@ public class VacationController {
         return assembler.toModel(vacation);
     }
 
-    @PostMapping("/vacation")
+    @PostMapping("/vacations")
     ResponseEntity<EntityModel<Vacation>> newVacation(@RequestBody Vacation vacation) {
         Vacation vac = new Vacation();
         vac.setVacation(vacation);
@@ -58,7 +58,7 @@ public class VacationController {
                 .body(assembler.toModel(newVacation));
     }
 
-    @PutMapping("/vacation/{id}")
+    @PutMapping("/vacations/{id}")
     public Vacation replaceVacation(@RequestBody Vacation vacation, @PathVariable Long id) {
 
         return repository.findById(id)
@@ -68,12 +68,12 @@ public class VacationController {
                 }).orElseThrow(() -> new NotFoundException(id));
     }
 
-    @DeleteMapping("/vacation/{id}")
+    @DeleteMapping("/vacations/{id}")
     void deleteVacation(@PathVariable Long id) {
         repository.deleteById(id);
     }
 
-    @PutMapping("/approve/{id}")
+    @PutMapping("/approved/{id}")
     public Vacation approveVacation(@RequestParam boolean approved, @RequestParam Long approved_by, @PathVariable Long id){
         return repository.findById(id).map(vac -> {
             vac.setApprove(approved, approved_by, getActualDate());
