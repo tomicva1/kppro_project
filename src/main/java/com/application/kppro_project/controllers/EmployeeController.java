@@ -56,7 +56,7 @@ public class EmployeeController {
             return user.toStringLogin();
         }
         else{
-            return null;
+            throw new NotFoundException("Wrong password");
         }
     }
 

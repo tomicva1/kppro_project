@@ -6,6 +6,6 @@ public class NotFoundException extends RuntimeException {
     }
 
     public NotFoundException(String name) {
-        super("Could not find " + name);
+        super("Something went wrong: " + name);
     }
 }
