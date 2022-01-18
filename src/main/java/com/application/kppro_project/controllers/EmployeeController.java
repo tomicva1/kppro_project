@@ -47,9 +47,10 @@ public class EmployeeController {
         boolean login = pwdMatch(employee.getPassword(), pwd);
         if(login) {
             String token = getJWTToken(username);
-            Employee user = new Employee();
-            user.setUsername(username);
+            Employee user = employee;
             user.setToken(token);
+
+            repository.save(user);
 
             return user.toStringLogin();
         }
@@ -139,4 +140,11 @@ public class EmployeeController {
 
         return b.matches(pwd, userPwd);
     }
+
+    /*public boolean checkToken(String token){
+        repository.findByToken(token) //
+                .orElseThrow(() -> new NotFoundException("token"));
+
+        return true;
+    }*/
 }
