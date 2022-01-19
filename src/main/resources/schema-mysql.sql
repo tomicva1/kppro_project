@@ -30,12 +30,12 @@ CREATE TABLE `vacation` (
                             id int auto_increment
                                 primary key,
                             employee_id int not null,
-                            date_from date not null,
-                            date_to date not null,
+                            date_from datetime not null,
+                            date_to datetime not null,
                             note varchar(255) null,
-                            approved boolean not null,
-                            approved_by int null,
-                            approval_time date null
+                            status varchar(255) null,
+                            update_by int null,
+                            update_time datetime null
 ) ENGINE=MyISAM;
 
 create index FK6qrwq18c5kq468gvsmwm43cgp
@@ -66,7 +66,7 @@ create index FK6qrwq18c5kq468gvsmwm43cgp
 --
 -- Inserting data for table `employee`
 --
-
+INSERT INTO `hibernate_sequence` VALUES (0);
 
 INSERT INTO `department`
 VALUES

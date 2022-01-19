@@ -68,7 +68,7 @@ public class FeedbackController {
                 .map(feedback -> {
                     feedback.setNote(newFeedback.getNote());
                     feedback.setQuality(newFeedback.getQuality());
-                    feedback.setEmployee_id(newFeedback.getEmployee_id());
+                    feedback.setEmployeeId(newFeedback.getEmployeeId());
                     return repository.save(feedback);
                 })
                 .orElseGet(() -> {

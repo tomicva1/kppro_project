@@ -12,31 +12,31 @@ import java.util.Objects;
 public class Vacation {
 
     private @Id @GeneratedValue Long id;
-    private Long employee_id;
+    private Long employeeId;
     private Date dateFrom;
     private Date dateTo;
     private String note;
-    private boolean approved;
-    private Long approvedBy;
-    private Date approvalTime;
+    private String status;
+    private Long updateBy;
+    private Date updateTime;
 
     public Vacation() {
     }
 
-    public Vacation(Long id, Long employee_id, Date dateFrom, Date dateTo, String note, boolean approved) {
+    public Vacation(Long id, Long employeeId, Date dateFrom, Date dateTo, String note, String status) {
         this.id = id;
-        this.employee_id = employee_id;
+        this.employeeId = employeeId;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
         this.note = note;
-        this.approved = approved;
+        this.status = status;
     }
 
-    public Vacation(Long id, boolean approved, Long approvedBy, Date approvalTime) {
+    public Vacation(Long id, String status, Long updateBy, Date updateTime) {
         this.id = id;
-        this.approved = approved;
-        this.approvedBy = approvedBy;
-        this.approvalTime = approvalTime;
+        this.status = status;
+        this.updateBy = updateBy;
+        this.updateTime = updateTime;
     }
 
     public Long getId() {
@@ -45,12 +45,12 @@ public class Vacation {
 
     public void setId(Long id) { this.id = id; }
 
-    public Long getEmployee_id() {
-        return employee_id;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployee_id(Long employee_id) {
-        this.employee_id = employee_id;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
     public Date getDateFrom() {
@@ -77,42 +77,42 @@ public class Vacation {
         this.note = note;
     }
 
-    public boolean isApproved() {
-        return approved;
+    public String getStatus() {
+        return status;
     }
 
-    public void setApproved(boolean approved) {
-        this.approved = approved;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public Long getApprovedBy() {
-        return approvedBy;
+    public Long getUpdatedBy() {
+        return updateBy;
     }
 
-    public void setApprovedBy(Long approvedBy) {
-        this.approvedBy = approvedBy;
+    public void setUpdatedBy(Long updateBy) {
+        this.updateBy = updateBy;
     }
 
-    public Date getApprovalTime() {
-        return approvalTime;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setApprovalTime(Date approvalTime) {
-        this.approvalTime = approvalTime;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public void setVacation(Vacation vacation) {
-        this.employee_id = vacation.getEmployee_id();
+        this.employeeId = vacation.getEmployeeId();
         this.dateFrom = vacation.getDateFrom();
         this.dateTo = vacation.getDateTo();
         this.note = vacation.getNote();
-        this.approved = vacation.approved;
+        this.status = vacation.status;
     }
 
-    public void setApprove(boolean approved, Long approvedBy, Date approvalTime){
-        this.approved = approved;
-        this.approvedBy = approvedBy;
-        this.approvalTime = approvalTime;
+    public void setApprove(String status, Long updateBy, Date updateTime){
+        this.status = status;
+        this.updateBy = updateBy;
+        this.updateTime = updateTime;
     }
 
     @Override
@@ -120,25 +120,25 @@ public class Vacation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vacation vacation = (Vacation) o;
-        return approved == vacation.approved &&
+        return status == vacation.status &&
                 Objects.equals(id, vacation.id) &&
-                Objects.equals(employee_id, vacation.employee_id) &&
+                Objects.equals(employeeId, vacation.employeeId) &&
                 Objects.equals(dateFrom, vacation.dateFrom) &&
                 Objects.equals(dateTo, vacation.dateTo) &&
                 Objects.equals(note, vacation.note) &&
-                Objects.equals(approvedBy, vacation.approvedBy) &&
-                Objects.equals(approvalTime, vacation.approvalTime);
+                Objects.equals(updateBy, vacation.updateBy) &&
+                Objects.equals(updateTime, vacation.updateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, employee_id, dateFrom, dateTo, note, approved, approvedBy, approvalTime);
+        return Objects.hash(id, employeeId, dateFrom, dateTo, note, status, updateBy, updateTime);
     }
 
     @Override
     public String toString() {
-        return "Vacation{" + "id=" + this.id + ", employee_id='" + this.employee_id + '\'' + ", dateFrom='" + this.dateFrom
-                + '\'' + ", dateTo='" + this.dateTo + '\'' + ", approved='" + this.approved + '\'' + ", approvedBy='" + this.approvedBy
-                + '\'' + ", approvalTime='" + this.approvalTime + '\'' + ", note='" + this.note + '\'' + '}';
+        return "Vacation{" + "id=" + this.id + ", employeeId='" + this.employeeId + '\'' + ", dateFrom='" + this.dateFrom
+                + '\'' + ", dateTo='" + this.dateTo + '\'' + ", status='" + this.status + '\'' + ", updateBy='" + this.updateBy
+                + '\'' + ", updateTime='" + this.updateTime + '\'' + ", note='" + this.note + '\'' + '}';
     }
 }

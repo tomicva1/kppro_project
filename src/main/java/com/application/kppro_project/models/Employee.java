@@ -19,18 +19,18 @@ public class Employee {
     private String role;
     private String username;
     private String password;
-    private int department_id;
+    private int departmentId;
     private String token;
 
     public Employee() {}
 
-    public Employee(String firstName, String lastName, String username, String role, int department_id) {
+    public Employee(String firstName, String lastName, String username, String role, int departmentId) {
 
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
         this.username = username;
-        this.department_id = department_id;
+        this.departmentId = departmentId;
     }
 
     public String getName() {
@@ -91,12 +91,12 @@ public class Employee {
         this.password = password;
     }
 
-    public int getDepartment_id() {
-        return department_id;
+    public int getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment_id(int department_id) {
-        this.department_id = department_id;
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
     }
 
     @Override
@@ -110,12 +110,12 @@ public class Employee {
                 Objects.equals(role, employee.role) &&
                 Objects.equals(username, employee.username) &&
                 Objects.equals(password, employee.password) &&
-                Objects.equals(department_id, employee.department_id);
+                Objects.equals(departmentId, employee.departmentId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, role, username, password, department_id);
+        return Objects.hash(id, firstName, lastName, role, username, password, departmentId);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class Employee {
                 ", role='" + role + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", department_id='" + department_id + '\'' +
+                ", departmentId='" + departmentId + '\'' +
                 '}';
     }
 

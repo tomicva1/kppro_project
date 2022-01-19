@@ -1,15 +1,17 @@
 package com.application.kppro_project.controllers;
 
+import com.application.kppro_project.dao.EmployeeRepository;
 import com.application.kppro_project.dao.VacationRepository;
+import com.application.kppro_project.models.Employee;
 import com.application.kppro_project.models.Vacation;
 import com.application.kppro_project.models.VacationModelAssembler;
 import com.application.kppro_project.other.NotFoundException;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,10 +24,32 @@ public class VacationController {
 
     private final VacationRepository repository;
     private final VacationModelAssembler assembler;
+    private final EmployeeRepository employeeRepository;
 
-    public VacationController(VacationRepository repository, VacationModelAssembler assembler) {
+    public VacationController(VacationRepository repository, VacationModelAssembler assembler, EmployeeRepository employeeRepository) {
         this.repository = repository;
         this.assembler = assembler;
+        this.employeeRepository = employeeRepository;
+    }
+
+    @GetMapping("/vacations/emp")
+    public CollectionModel<EntityModel<Vacation>> myVacations() {
+        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Employee employee = (Employee) employeeRepository.findByUsername(principal)
+                .orElseThrow(() -> new NotFoundException(principal));
+
+        List<EntityModel<Vacation>> vacation = repository.findByEmployeeId(employee.getId()).stream().map(assembler::toModel).collect(Collectors.toList());
+
+        return CollectionModel.of(vacation, linkTo(methodOn(VacationController.class).myVacations()).withSelfRel());
+    }
+
+    @GetMapping("/vacations/{id}")
+    public EntityModel<Vacation> one(@PathVariable Long id) {
+
+        Vacation vacation = repository.findById(id) //
+                .orElseThrow(() -> new NotFoundException(id));
+
+        return assembler.toModel(vacation);
     }
 
     @GetMapping("/vacations")
@@ -38,20 +62,16 @@ public class VacationController {
         return CollectionModel.of(vacation, linkTo(methodOn(VacationController.class).all()).withSelfRel());
     }
 
-    @GetMapping("/vacations/{id}")
-    public EntityModel<Vacation> one(@PathVariable Long id) {
-
-        Vacation vacation = repository.findById(id) //
-                .orElseThrow(() -> new NotFoundException(id));
-
-        return assembler.toModel(vacation);
-    }
-
     @PostMapping("/vacations")
     ResponseEntity<EntityModel<Vacation>> newVacation(@RequestBody Vacation vacation) {
+        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Employee employee = (Employee) employeeRepository.findByUsername(principal)
+                .orElseThrow(() -> new NotFoundException(principal));
+
         Vacation vac = new Vacation();
         vac.setVacation(vacation);
-        Vacation newVacation = repository.save(vacation);
+        vac.setEmployeeId(employee.getId());
+        Vacation newVacation = repository.save(vac);
 
         return ResponseEntity //
                 .created(linkTo(methodOn(VacationController.class).one(newVacation.getId())).toUri()) //
@@ -74,12 +94,14 @@ public class VacationController {
     }
 
     @PutMapping("/approved/{id}")
-    public Vacation approveVacation(@RequestParam boolean approved, @RequestParam Long approved_by, @PathVariable Long id){
+    public Vacation approveVacation(@RequestParam String status, @RequestParam Long updatedBy, @PathVariable Long id){
         return repository.findById(id).map(vac -> {
-            vac.setApprove(approved, approved_by, getActualDate());
+            vac.setApprove(status, updatedBy, getActualDate());
             return repository.save(vac);
         }).orElseThrow(() -> new NotFoundException(id));
     }
+
+
 
     private Date getActualDate(){;
         Date date = new Date();

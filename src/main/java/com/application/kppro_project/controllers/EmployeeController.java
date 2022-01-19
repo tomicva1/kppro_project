@@ -65,7 +65,6 @@ public class EmployeeController {
     // tag::get-aggregate-root[]
     @GetMapping("/employees")
     public CollectionModel<EntityModel<Employee>> all() {
-
         List<EntityModel<Employee>> employees = repository.findAll().stream() //
                 .map(assembler::toModel) //
                 .collect(Collectors.toList());

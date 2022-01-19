@@ -13,16 +13,16 @@ public class Feedback {
     private @Id @GeneratedValue Long id;
     private int quality;
     private String note;
-    private Long employee_id;
+    private Long employeeId;
 
     public Feedback() {
     }
 
-    public Feedback(Long id, int quality, String note, Long employee_id) {
+    public Feedback(Long id, int quality, String note, Long employeeId) {
         this.id = id;
         this.quality = quality;
         this.note = note;
-        this.employee_id = employee_id;
+        this.employeeId = employeeId;
     }
 
     public Long getId() {
@@ -49,12 +49,12 @@ public class Feedback {
         this.note = note;
     }
 
-    public Long getEmployee_id() {
-        return employee_id;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployee_id(Long employee_id) {
-        this.employee_id = employee_id;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
     @Override
@@ -65,12 +65,12 @@ public class Feedback {
         return quality == feedback.quality &&
                 Objects.equals(id, feedback.id) &&
                 Objects.equals(note, feedback.note) &&
-                Objects.equals(employee_id, feedback.employee_id);
+                Objects.equals(employeeId, feedback.employeeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, quality, note, employee_id);
+        return Objects.hash(id, quality, note, employeeId);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Feedback {
                 "id=" + id +
                 ", quality=" + quality +
                 ", note='" + note + '\'' +
-                ", employee_id=" + employee_id +
+                ", employeeId=" + employeeId +
                 '}';
     }
 }
