@@ -29,13 +29,13 @@ public class DepartmentController {
     }
 
     @GetMapping("/department")
-    public CollectionModel<EntityModel<Department>> all() {
+    public List<EntityModel<Department>> all() {
 
         List<EntityModel<Department>> department = repository.findAll().stream() //
                 .map(assembler::toModel) //
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(department, linkTo(methodOn(DepartmentController.class).all()).withSelfRel());
+        return department;
     }
 
     @GetMapping("/department/{id}")

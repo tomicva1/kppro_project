@@ -33,14 +33,14 @@ public class VacationController {
     }
 
     @GetMapping("/vacations/emp")
-    public CollectionModel<EntityModel<Vacation>> myVacations() {
+    public List<EntityModel<Vacation>> myVacations() {
         String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Employee employee = (Employee) employeeRepository.findByUsername(principal)
                 .orElseThrow(() -> new NotFoundException(principal));
 
         List<EntityModel<Vacation>> vacation = repository.findByEmployeeId(employee.getId()).stream().map(assembler::toModel).collect(Collectors.toList());
 
-        return CollectionModel.of(vacation, linkTo(methodOn(VacationController.class).myVacations()).withSelfRel());
+        return vacation;
     }
 
     @GetMapping("/vacations/{id}")
@@ -53,13 +53,14 @@ public class VacationController {
     }
 
     @GetMapping("/vacations")
-    public CollectionModel<EntityModel<Vacation>> all() {
+    public List<EntityModel<Vacation>> all() {
 
         List<EntityModel<Vacation>> vacation = repository.findAll().stream() //
                 .map(assembler::toModel) //
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(vacation, linkTo(methodOn(VacationController.class).all()).withSelfRel());
+        /*return CollectionModel.of(vacation, linkTo(methodOn(VacationController.class).all()).withSelfRel());*/
+        return vacation;
     }
 
     @PostMapping("/vacations")

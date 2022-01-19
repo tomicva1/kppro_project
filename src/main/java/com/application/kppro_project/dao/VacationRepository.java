@@ -1,5 +1,6 @@
 package com.application.kppro_project.dao;
 
+import com.application.kppro_project.models.Department;
 import com.application.kppro_project.models.Vacation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.hateoas.EntityModel;

@@ -32,13 +32,13 @@ public class FeedbackController {
     }
 
     @GetMapping("/feedback")
-    public CollectionModel<EntityModel<Feedback>> all() {
+    public List<EntityModel<Feedback>> all() {
 
         List<EntityModel<Feedback>> feedback = repository.findAll().stream() //
                 .map(assembler::toModel) //
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(feedback, linkTo(methodOn(FeedbackController.class).all()).withSelfRel());
+        return feedback;
     }
 
 
