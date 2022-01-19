@@ -70,30 +70,31 @@ INSERT INTO `hibernate_sequence` VALUES (0);
 
 INSERT INTO `department`
 VALUES
-(1,123, 'Vývojové oddělení', 'DEV'),
-(2,123,'Produkťáci', 'PROD');
+(1,123, 'Dev department', 'DEV'),
+(2,123,'Product department', 'PROD');
 
 INSERT INTO `employee`
 VALUES
-(1,'Jan', 'Novak', '$2a$10$h7B0/27moSbdj47MAjH0iuJDrit6eJARN7ff9nHDJ6umUooauHYn6','USER','user1', 1, ''),
-(2,'Jan1', 'Novak1','$2a$10$h7B0/27moSbdj47MAjH0iuJDrit6eJARN7ff9nHDJ6umUooauHYn6','USER','user2', 1, ''),
-(3,'Jan2', 'Novak2','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user3', 2, ''),
-(4,'Jan3', 'Novak3','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user4', 2, ''),
-(5,'Jan4', 'Novak4','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user5', 2, ''),
-(6,'Jan8', 'Novak8','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','MANAGER','manager1', 1, '');
+(1,'John', 'Nowak', '$2a$10$h7B0/27moSbdj47MAjH0iuJDrit6eJARN7ff9nHDJ6umUooauHYn6','USER','user1', 1, ''),
+(2,'Peter', 'Lesser','$2a$10$h7B0/27moSbdj47MAjH0iuJDrit6eJARN7ff9nHDJ6umUooauHYn6','USER','user2', 1, ''),
+(3,'Bob', 'Smith','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user3', 2, ''),
+(4,'Barack', 'Obama','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user4', 2, ''),
+(5,'Jonnathan', 'Plane','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user5', 2, ''),
+(6,'Nyguen', 'Juges','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','MANAGER','manager1', 1, '');
 
 INSERT INTO `feedback`
 VALUES
-(1,5, 'Pracovní morálka mizivá', 1),
-(2,1,'Ukázkový zaměstnanec', 2),
-(3,4,'Snažení tam je, ale bhužel výsledek práce nulový', 3),
-(4,3,'Dobrý průměr, něco se povedlo, něco ne.', 4),
-(5,5,'Velmi podprůměrný výkon', 1);
+(1,5, 'Work morale is scarce', 1),
+(2,1, 'Sample Employee', 2),
+(3,4, 'Effort there is, but unfortunately the result of work zero', 3),
+(4,3, 'Good average, something worked, something not.', 4),
+(5,5, 'Very below average performance', 1);
 
-/*INSERT INTO `vacation`
-VALUES
-(1,, 'Pracovní morálka mizivá', 1),
-(2,1,'Ukázkový zaměstnanec', 2),
-(3,4,'Snažení tam je, ale bhužel výsledek práce nulový', 3),
-(4,3,'Dobrý průměr, něco se povedlo, něco ne.', 4),
-(5,5,'Velmi podprůměrný výkon', 1);*/
+INSERT INTO `vacation`
+VALUES (1, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'First vacation','', null, null),
+       (2, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Second vacation','', null, null),
+       (3, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Third vacation','', null, null),
+       (4, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Fouth vacation','', null, null),
+       (5, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Fifth vacation','', null, null),
+       (6, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Sixth vacation','', null, null),
+       (7, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Seventh vacation','', null, null);
