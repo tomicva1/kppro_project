@@ -2,6 +2,7 @@ package com.application.kppro_project.controllers;
 
 import com.application.kppro_project.dao.EmployeeRepository;
 import com.application.kppro_project.dao.VacationRepository;
+import com.application.kppro_project.enums.StatusEnum;
 import com.application.kppro_project.models.Employee;
 import com.application.kppro_project.models.Vacation;
 import com.application.kppro_project.models.VacationModelAssembler;
@@ -64,7 +65,7 @@ public class VacationController {
     }
 
     @PostMapping("/vacations")
-    ResponseEntity<EntityModel<Vacation>> newVacation(@RequestBody Vacation vacation) {
+    public ResponseEntity<EntityModel<Vacation>> newVacation(@RequestBody Vacation vacation) {
         String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Employee employee = (Employee) employeeRepository.findByUsername(principal)
                 .orElseThrow(() -> new NotFoundException(principal));
@@ -72,6 +73,7 @@ public class VacationController {
         Vacation vac = new Vacation();
         vac.setVacation(vacation);
         vac.setEmployeeId(employee.getId());
+        vac.setStatus(StatusEnum.WAITING);
         Vacation newVacation = repository.save(vac);
 
         return ResponseEntity //
@@ -90,14 +92,19 @@ public class VacationController {
     }
 
     @DeleteMapping("/vacations/{id}")
-    void deleteVacation(@PathVariable Long id) {
+    String deleteVacation(@PathVariable Long id) {
+
         repository.deleteById(id);
+
+        return "Vacation has been deleted";
     }
 
     @PutMapping("/approved/{id}")
-    public Vacation approveVacation(@RequestParam String status, @RequestParam Long updatedBy, @PathVariable Long id){
+    public Vacation approveVacation(@RequestParam StatusEnum status, @RequestParam Long updatedBy, @PathVariable Long id){
         return repository.findById(id).map(vac -> {
+            vac.setId(id);
             vac.setApprove(status, updatedBy, getActualDate());
+
             return repository.save(vac);
         }).orElseThrow(() -> new NotFoundException(id));
     }

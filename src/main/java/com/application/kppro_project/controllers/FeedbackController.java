@@ -1,12 +1,12 @@
 package com.application.kppro_project.controllers;
 
+import com.application.kppro_project.dao.EmployeeRepository;
 import com.application.kppro_project.dao.FeedbackRepository;
 import com.application.kppro_project.models.Employee;
 import com.application.kppro_project.models.Feedback;
 import com.application.kppro_project.models.FeedbackModelAssembler;
 import com.application.kppro_project.models.Vacation;
 import com.application.kppro_project.other.NotFoundException;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +17,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 public class FeedbackController {
 
     private final FeedbackRepository repository;
     private final FeedbackModelAssembler assembler;
+    private final EmployeeRepository employeeRepository;
 
 
-    public FeedbackController(FeedbackRepository repository, FeedbackModelAssembler assembler) {
+    public FeedbackController(FeedbackRepository repository, FeedbackModelAssembler assembler, EmployeeRepository employeeRepository) {
         this.repository = repository;
         this.assembler = assembler;
+        this.employeeRepository = employeeRepository;
     }
 
     @GetMapping("/feedback")
@@ -37,6 +38,18 @@ public class FeedbackController {
         List<EntityModel<Feedback>> feedback = repository.findAll().stream() //
                 .map(assembler::toModel) //
                 .collect(Collectors.toList());
+
+        return feedback;
+    }
+
+    @GetMapping("/feedback/emp")
+    public List<EntityModel<Feedback>> myFeedbacks() {
+
+        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Employee employee = (Employee) employeeRepository.findByUsername(principal)
+                .orElseThrow(() -> new NotFoundException(principal));
+
+        List<EntityModel<Feedback>> feedback = repository.findByEmployeeId(employee.getId()).stream().map(assembler::toModel).collect(Collectors.toList());
 
         return feedback;
     }
@@ -53,7 +66,7 @@ public class FeedbackController {
 
     // end::get-aggregate-root[]
     @PostMapping("/feedback")
-    ResponseEntity<?> newFeedback(@RequestBody Feedback newFeedback) {
+    public ResponseEntity<?> newFeedback(@RequestBody Feedback newFeedback) {
         EntityModel<Feedback> entityModel = assembler.toModel(repository.save(newFeedback));
 
         return ResponseEntity //
@@ -78,7 +91,10 @@ public class FeedbackController {
     }
 
     @DeleteMapping("/feedback/{id}")
-    void deleteFeedback(@PathVariable Long id) {
+    public String deleteFeedback(@PathVariable Long id) {
+
         repository.deleteById(id);
+
+        return "Feedback has been deleted";
     }
 }

@@ -7,25 +7,19 @@ import com.application.kppro_project.models.EmployeeModelAssembler;
 import com.application.kppro_project.other.NotFoundException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 //@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
@@ -41,7 +35,7 @@ public class EmployeeController {
         this.assembler = assembler;
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public String login(@RequestBody Employee body) {
         Employee employee = (Employee) repository.findByUsername(body.getUsername()) //
                 .orElseThrow(() -> new NotFoundException(body.getUsername()));
@@ -84,9 +78,10 @@ public class EmployeeController {
 
     // end::get-aggregate-root[]
     @PostMapping("/employees")
-    ResponseEntity<?> newEmployee(@RequestBody Employee newEmployee) {
-
-        EntityModel<Employee> entityModel = assembler.toModel(repository.save(newEmployee));
+    public ResponseEntity<?> newEmployee(@RequestBody Employee newEmployee) {
+        newEmployee.setPassword(pwdCreate(newEmployee.getPassword()));
+        repository.save(newEmployee);
+        EntityModel<Employee> entityModel = assembler.toModel(newEmployee);
 
         return ResponseEntity //
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -109,8 +104,10 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/employees/{id}")
-    void deleteEmployee(@PathVariable Long id) {
+    String deleteEmployee(@PathVariable Long id) {
         repository.deleteById(id);
+
+        return "User has been deleted";
     }
 
 
@@ -133,6 +130,11 @@ public class EmployeeController {
                         secretKey.getBytes()).compact();
 
         return token;
+    }
+
+    private static String pwdCreate(String userPwd){
+        BCryptPasswordEncoder b = new BCryptPasswordEncoder();
+        return b.encode(userPwd);
     }
 
     private static boolean pwdMatch(String userPwd, String pwd){

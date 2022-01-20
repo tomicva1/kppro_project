@@ -1,5 +1,9 @@
 package com.application.kppro_project.models;
 
+import com.application.kppro_project.dao.DepartmentRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.Link;
 
 import java.util.Objects;
@@ -18,13 +22,15 @@ public class Employee {
     private String lastName;
     private String role;
     private String username;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    private int departmentId;
+    private Long departmentId;
+    @JsonIgnore
     private String token;
 
     public Employee() {}
 
-    public Employee(String firstName, String lastName, String username, String role, int departmentId) {
+    public Employee(String firstName, String lastName, String username, String role, Long departmentId) {
 
         this.firstName = firstName;
         this.lastName = lastName;
@@ -91,11 +97,11 @@ public class Employee {
         this.password = password;
     }
 
-    public int getDepartmentId() {
+    public Long getDepartmentId() {
         return departmentId;
     }
 
-    public void setDepartmentId(int departmentId) {
+    public void setDepartmentId(Long departmentId) {
         this.departmentId = departmentId;
     }
 
@@ -140,5 +146,13 @@ public class Employee {
                 "\"userId\":\"" + id + '"' +
                 ", \"token\":\"" + token + '"' +
                 '}';
+    }
+
+    public String toJson(String department) {
+        return "{\"data\":{" +
+                    "\"firstName\":\"" + firstName + "\"," +
+                    "\"lastName\":\"" + lastName + "\"," +
+                    "\"role\":\"" + role + "\"," +
+                    "\"department\":\"" + department + "\"}}";
     }
 }

@@ -75,8 +75,10 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/department/{id}")
-    void deleteDepartment(@PathVariable Long id) {
+    public String deleteDepartment(@PathVariable Long id) {
+
         repository.deleteById(id);
+        return "Department has been deleted";
     }
 
 

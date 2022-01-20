@@ -1,5 +1,7 @@
 package com.application.kppro_project.models;
 
+import com.application.kppro_project.enums.StatusEnum;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,14 +18,14 @@ public class Vacation {
     private Date dateFrom;
     private Date dateTo;
     private String note;
-    private String status;
+    private StatusEnum status;
     private Long updateBy;
     private Date updateTime;
 
     public Vacation() {
     }
 
-    public Vacation(Long id, Long employeeId, Date dateFrom, Date dateTo, String note, String status) {
+    public Vacation(Long id, Long employeeId, Date dateFrom, Date dateTo, String note, StatusEnum status) {
         this.id = id;
         this.employeeId = employeeId;
         this.dateFrom = dateFrom;
@@ -32,7 +34,7 @@ public class Vacation {
         this.status = status;
     }
 
-    public Vacation(Long id, String status, Long updateBy, Date updateTime) {
+    public Vacation(Long id, StatusEnum status, Long updateBy, Date updateTime) {
         this.id = id;
         this.status = status;
         this.updateBy = updateBy;
@@ -77,11 +79,11 @@ public class Vacation {
         this.note = note;
     }
 
-    public String getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 
@@ -109,7 +111,7 @@ public class Vacation {
         this.status = vacation.status;
     }
 
-    public void setApprove(String status, Long updateBy, Date updateTime){
+    public void setApprove(StatusEnum status, Long updateBy, Date updateTime){
         this.status = status;
         this.updateBy = updateBy;
         this.updateTime = updateTime;

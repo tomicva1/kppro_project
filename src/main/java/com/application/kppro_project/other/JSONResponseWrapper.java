@@ -2,6 +2,7 @@ package com.application.kppro_project.other;
 
 import lombok.Data;
 import org.springframework.core.MethodParameter;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -21,16 +22,31 @@ public class JSONResponseWrapper implements ResponseBodyAdvice {
     @SuppressWarnings("unchecked")
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         if (body instanceof List) {
-            return new Wrapper<>((List<Object>) body);
+            return new ListWrapper<>((List<Object>) body);
+        }
+        if(body instanceof EntityModel) {
+            return new EntityModelWrapper<>((EntityModel<Object>) body);
         }
         return body;
     }
 
     @Data // just the lombok annotation which provides getter and setter
-    private class Wrapper<T> {
+    private class ListWrapper<T> {
         private final List<T> data;
 
-        public Wrapper(List<T> data) {
+        public ListWrapper(List<T> data) {
+            this.data = data;
+        }
+
+
+    }
+
+    @Data
+    private class EntityModelWrapper<T> {
+
+        private final EntityModel<T> data;
+
+        public EntityModelWrapper(EntityModel<T> data){
             this.data = data;
         }
     }

@@ -66,7 +66,7 @@ create index FK6qrwq18c5kq468gvsmwm43cgp
 --
 -- Inserting data for table `employee`
 --
-INSERT INTO `hibernate_sequence` VALUES (0);
+INSERT INTO `hibernate_sequence` VALUES (1000);
 
 INSERT INTO `department`
 VALUES

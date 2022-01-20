@@ -17,6 +17,7 @@ public class FeedbackModelAssembler implements RepresentationModelAssembler<Feed
     public EntityModel<Feedback> toModel(Feedback feedback) {
         return EntityModel.of(feedback,
                 linkTo(methodOn(FeedbackController.class).one(feedback.getId())).withSelfRel(),
+                linkTo(methodOn(FeedbackController.class).myFeedbacks()).withRel("feedback"),
                 linkTo(methodOn(FeedbackController.class).all()).withRel("feedback"));
     }
 
