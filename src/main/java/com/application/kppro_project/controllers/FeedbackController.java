@@ -32,7 +32,7 @@ public class FeedbackController {
         this.employeeRepository = employeeRepository;
     }
 
-    @GetMapping("/feedback")
+    @GetMapping("/feedbacks")
     public List<EntityModel<Feedback>> all() {
 
         List<EntityModel<Feedback>> feedback = repository.findAll().stream() //
@@ -42,7 +42,7 @@ public class FeedbackController {
         return feedback;
     }
 
-    @GetMapping("/feedback/emp")
+    @GetMapping("/feedbacks/emp")
     public List<EntityModel<Feedback>> myFeedbacks() {
 
         String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
@@ -55,7 +55,7 @@ public class FeedbackController {
     }
 
 
-    @GetMapping("/feedback/{id}")
+    @GetMapping("/feedbacks/{id}")
     public EntityModel<Feedback> one(@PathVariable Long id) {
 
         Feedback feedback = repository.findById(id) //
@@ -65,7 +65,7 @@ public class FeedbackController {
     }
 
     // end::get-aggregate-root[]
-    @PostMapping("/feedback")
+    @PostMapping("/feedbacks")
     public ResponseEntity<?> newFeedback(@RequestBody Feedback newFeedback) {
         EntityModel<Feedback> entityModel = assembler.toModel(repository.save(newFeedback));
 
@@ -74,7 +74,7 @@ public class FeedbackController {
                 .body(entityModel);
     }
 
-    @PutMapping("/feedback/{id}")
+    @PutMapping("/feedbacks/{id}")
     public Feedback replaceFeedback(@RequestBody Feedback newFeedback, @PathVariable Long id) {
 
         return repository.findById(id)
@@ -90,7 +90,7 @@ public class FeedbackController {
                 });
     }
 
-    @DeleteMapping("/feedback/{id}")
+    @DeleteMapping("/feedbacks/{id}")
     public String deleteFeedback(@PathVariable Long id) {
 
         repository.deleteById(id);

@@ -28,7 +28,7 @@ public class DepartmentController {
         this.assembler = assembler;
     }
 
-    @GetMapping("/department")
+    @GetMapping("/departments")
     public List<EntityModel<Department>> all() {
 
         List<EntityModel<Department>> department = repository.findAll().stream() //
@@ -38,7 +38,7 @@ public class DepartmentController {
         return department;
     }
 
-    @GetMapping("/department/{id}")
+    @GetMapping("/departments/{id}")
     public EntityModel<Department> one(@PathVariable Long id) {
 
         Department department = repository.findById(id) //
@@ -48,7 +48,7 @@ public class DepartmentController {
     }
 
     // end::get-aggregate-root[]
-    @PostMapping("/department")
+    @PostMapping("/departments")
     ResponseEntity<?> newDepartment(@RequestBody Department newDepartment) {
 
         EntityModel<Department> entityModel = assembler.toModel(repository.save(newDepartment));
@@ -58,7 +58,7 @@ public class DepartmentController {
                 .body(entityModel);
     }
 
-    @PutMapping("/department/{id}")
+    @PutMapping("/departments/{id}")
     public Department replaceDepartment(@RequestBody Department newDepartment, @PathVariable Long id) {
 
         return repository.findById(id)
@@ -74,7 +74,7 @@ public class DepartmentController {
                 });
     }
 
-    @DeleteMapping("/department/{id}")
+    @DeleteMapping("/departments/{id}")
     public String deleteDepartment(@PathVariable Long id) {
 
         repository.deleteById(id);
