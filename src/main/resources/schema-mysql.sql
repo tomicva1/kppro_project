@@ -33,7 +33,7 @@ CREATE TABLE `vacation` (
                             date_from datetime not null,
                             date_to datetime not null,
                             note varchar(255) null,
-                            status varchar(255) null,
+                            status int not null,
                             update_by int null,
                             update_time datetime null
 ) ENGINE=MyISAM;
@@ -91,10 +91,10 @@ VALUES
 (5,5, 'Very below average performance', 1);
 
 INSERT INTO `vacation`
-VALUES (1, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'First vacation','', null, null),
-       (2, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Second vacation','', null, null),
-       (3, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Third vacation','', null, null),
-       (4, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Fouth vacation','', null, null),
-       (5, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Fifth vacation','', null, null),
-       (6, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Sixth vacation','', null, null),
-       (7, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Seventh vacation','', null, null);
+VALUES (1, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'First vacation',0, null, null),
+       (2, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Second vacation',0, null, null),
+       (3, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Third vacation',0, null, null),
+       (4, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Fouth vacation',0, null, null),
+       (5, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Fifth vacation',0, null, null),
+       (6, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Sixth vacation',0, null, null),
+       (7, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Seventh vacation',0, null, null);

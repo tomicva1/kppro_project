@@ -60,7 +60,7 @@ public class VacationController {
                 .map(assembler::toModel) //
                 .collect(Collectors.toList());
 
-        /*return CollectionModel.of(vacation, linkTo(methodOn(VacationController.class).all()).withSelfRel());*/
+        //return CollectionModel.of(vacation, linkTo(methodOn(VacationController.class).all()).withSelfRel());*/
         return vacation;
     }
 

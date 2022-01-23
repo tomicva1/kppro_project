@@ -141,10 +141,11 @@ public class Employee {
         this.token = token;
     }
 
-    public String toStringLogin(){
+    public String toStringLogin(String expiration){
         return '{' +
                 "\"userId\":\"" + id + '"' +
                 ", \"token\":\"" + token + '"' +
+                ", \"expiration\":\"" + expiration + '"' +
                 '}';
     }
 

@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,13 +43,16 @@ public class EmployeeController {
 
         boolean login = pwdMatch(employee.getPassword(), body.getPassword());
         if(login) {
-            String token = getJWTToken(body.getUsername());
+            List<String> response = getJWTToken(body.getUsername());
+            String token = response.get(0);
+            String expiration = response.get(1);
             Employee user = employee;
             user.setToken(token);
 
+
             repository.save(user);
 
-            return user.toStringLogin();
+            return user.toStringLogin(expiration);
         }
         else{
             throw new NotFoundException("Wrong password");
@@ -111,10 +115,12 @@ public class EmployeeController {
     }
 
 
-    private static String getJWTToken(String username) {
+    private static List<String> getJWTToken(String username) {
         String secretKey = "mySecretKey";
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
+
+        Date expiration = new Date(System.currentTimeMillis() + 600000);
 
         String token = Jwts
                 .builder()
@@ -125,11 +131,14 @@ public class EmployeeController {
                                 .map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000))
+                .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS512,
                         secretKey.getBytes()).compact();
 
-        return token;
+        List<String> response = new ArrayList<>();
+        response.add(token);
+        response.add(expiration.toString());
+        return response;
     }
 
     private static String pwdCreate(String userPwd){
