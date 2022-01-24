@@ -4,11 +4,12 @@ package com.application.kppro_project.controllers;
 import com.application.kppro_project.dao.EmployeeRepository;
 import com.application.kppro_project.models.Employee;
 import com.application.kppro_project.models.EmployeeModelAssembler;
-import com.application.kppro_project.other.NotFoundException;
+import com.application.kppro_project.other.Exception;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -39,7 +40,8 @@ public class EmployeeController {
     @PostMapping("/login")
     public String login(@RequestBody Employee body) {
         Employee employee = (Employee) repository.findByUsername(body.getUsername()) //
-                .orElseThrow(() -> new NotFoundException(body.getUsername()));
+                .orElseThrow(() -> new Exception());
+        //.orElseThrow(() -> new Exception("The employee with this username: " + body.getUsername() + " not exist"));
 
         boolean login = pwdMatch(employee.getPassword(), body.getPassword());
         if(login) {
@@ -55,7 +57,7 @@ public class EmployeeController {
             return user.toStringLogin(expiration);
         }
         else{
-            throw new NotFoundException("Wrong password");
+            throw new Exception("Wrong password");
         }
     }
 
@@ -74,7 +76,8 @@ public class EmployeeController {
     @GetMapping("/employees/{id}")
     public EntityModel<Employee> one(@PathVariable Long id) {
         Employee employee = repository.findById(id) //
-                .orElseThrow(() -> new NotFoundException(id));
+                .orElseThrow(() -> new Exception());
+        //.orElseThrow(() -> new Exception("Employee with this id: " + id + " not exist"));
 
         return assembler.toModel(employee);
     }
@@ -108,6 +111,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/employees/{id}")
+    @ResponseStatus(HttpStatus.OK)
     void deleteEmployee(@PathVariable Long id) {
         repository.deleteById(id);
 

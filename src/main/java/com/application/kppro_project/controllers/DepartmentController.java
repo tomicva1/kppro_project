@@ -3,12 +3,16 @@ package com.application.kppro_project.controllers;
 import com.application.kppro_project.dao.DepartmentRepository;
 import com.application.kppro_project.models.Department;
 import com.application.kppro_project.models.DepartmentModelAssembler;
-import com.application.kppro_project.other.NotFoundException;
+import com.application.kppro_project.models.Employee;
+import com.application.kppro_project.other.Exception;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,7 +46,8 @@ public class DepartmentController {
     public EntityModel<Department> one(@PathVariable Long id) {
 
         Department department = repository.findById(id) //
-                .orElseThrow(() -> new NotFoundException(id));
+                .orElseThrow(() -> new Exception());
+        //.orElseThrow(() -> new Exception("Department with this id: " + id + " not exist"));
 
         return assembler.toModel(department);
     }
@@ -75,11 +80,10 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/departments/{id}")
+    @ResponseStatus(HttpStatus.OK)
     void deleteDepartment(@PathVariable Long id) {
 
         repository.deleteById(id);
         //return "Department has been deleted";
     }
-
-
 }

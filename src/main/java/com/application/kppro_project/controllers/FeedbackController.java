@@ -6,7 +6,7 @@ import com.application.kppro_project.models.Employee;
 import com.application.kppro_project.models.Feedback;
 import com.application.kppro_project.models.FeedbackModelAssembler;
 import com.application.kppro_project.models.Vacation;
-import com.application.kppro_project.other.NotFoundException;
+import com.application.kppro_project.other.Exception;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
@@ -45,10 +45,7 @@ public class FeedbackController {
 
     @GetMapping("/feedbacks/emp")
     public List<EntityModel<Feedback>> myFeedbacks() {
-
-        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Employee employee = (Employee) employeeRepository.findByUsername(principal)
-                .orElseThrow(() -> new NotFoundException(principal));
+        Employee employee = getEmployee();
 
         System.out.println(employee.getId());
         List<EntityModel<Feedback>> feedback = repository.findByEmployeeId(employee.getId()).stream().map(assembler::toModel).collect(Collectors.toList());
@@ -61,7 +58,8 @@ public class FeedbackController {
     public EntityModel<Feedback> one(@PathVariable Long id) {
 
         Feedback feedback = repository.findById(id) //
-                .orElseThrow(() -> new NotFoundException(id));
+                .orElseThrow(() -> new Exception());
+        //.orElseThrow(() -> new Exception("Feedback with this id: " + id + " not exist"));
 
         return assembler.toModel(feedback);
     }
@@ -69,9 +67,7 @@ public class FeedbackController {
     // end::get-aggregate-root[]
     @PostMapping("/feedbacks")
     public ResponseEntity<?> newFeedback(@RequestBody Feedback newFeedback) {
-        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Employee employee = (Employee) employeeRepository.findByUsername(principal)
-                .orElseThrow(() -> new NotFoundException(principal));
+        Employee employee = getEmployee();
 
         newFeedback.setAuthor(employee.getId());
         newFeedback.setCreationTime(getActualDate());
@@ -111,5 +107,14 @@ public class FeedbackController {
         Date date = new Date();
 
         return date;
+    }
+
+    Employee getEmployee(){
+        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Employee employee = (Employee) employeeRepository.findByUsername(principal)
+                .orElseThrow(() -> new Exception());
+        //.orElseThrow(() -> new Exception("The employee with this username: " + principal + " not exist"));
+
+        return employee;
     }
 }

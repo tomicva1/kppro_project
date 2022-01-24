@@ -6,12 +6,14 @@ import com.application.kppro_project.enums.StatusEnum;
 import com.application.kppro_project.models.Employee;
 import com.application.kppro_project.models.Vacation;
 import com.application.kppro_project.models.VacationModelAssembler;
-import com.application.kppro_project.other.NotFoundException;
+import com.application.kppro_project.other.Exception;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
@@ -35,9 +37,7 @@ public class VacationController {
 
     @GetMapping("/vacations/emp")
     public List<EntityModel<Vacation>> myVacations() {
-        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Employee employee = (Employee) employeeRepository.findByUsername(principal)
-                .orElseThrow(() -> new NotFoundException(principal));
+        Employee employee = getEmployee();
 
         List<EntityModel<Vacation>> vacation = repository.findByEmployeeId(employee.getId()).stream().map(assembler::toModel).collect(Collectors.toList());
 
@@ -48,7 +48,8 @@ public class VacationController {
     public EntityModel<Vacation> one(@PathVariable Long id) {
 
         Vacation vacation = repository.findById(id) //
-                .orElseThrow(() -> new NotFoundException(id));
+                .orElseThrow(() -> new Exception());
+        //.orElseThrow(() -> new Exception("Vacation with this id: " + id + " not exist"));
 
         return assembler.toModel(vacation);
     }
@@ -66,9 +67,7 @@ public class VacationController {
 
     @PostMapping("/vacations")
     public ResponseEntity<EntityModel<Vacation>> newVacation(@RequestBody Vacation vacation) {
-        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Employee employee = (Employee) employeeRepository.findByUsername(principal)
-                .orElseThrow(() -> new NotFoundException(principal));
+        Employee employee = getEmployee();
 
         Vacation vac = new Vacation();
         vac.setVacation(vacation);
@@ -83,16 +82,22 @@ public class VacationController {
 
     @PutMapping("/vacations/{id}")
     public Vacation replaceVacation(@RequestBody Vacation vacation, @PathVariable Long id) {
+        Employee employee = getEmployee();
+        checkIfManager(employee);
+
 
         return repository.findById(id)
                 .map(vac -> {
                     vac.setVacation(vacation);
                     return repository.save(vac);
-                }).orElseThrow(() -> new NotFoundException(id));
+                }).orElseThrow(() -> new Exception());
     }
 
     @DeleteMapping("/vacations/{id}")
+    @ResponseStatus(HttpStatus.OK)
     void deleteVacation(@PathVariable Long id) {
+        Employee employee = getEmployee();
+        checkIfManager(employee);
 
         repository.deleteById(id);
 
@@ -106,7 +111,7 @@ public class VacationController {
             vac.setApprove(status, updatedBy, getActualDate());
 
             return repository.save(vac);
-        }).orElseThrow(() -> new NotFoundException(id));
+        }).orElseThrow(() -> new Exception());
     }
 
 
@@ -115,6 +120,21 @@ public class VacationController {
         Date date = new Date();
 
         return date;
+    }
+
+    void checkIfManager(Employee employee){
+        if(employee.getRole() != "MANAGER"){
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    Employee getEmployee(){
+        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Employee employee = (Employee) employeeRepository.findByUsername(principal)
+                .orElseThrow(() -> new Exception());
+        //.orElseThrow(() -> new Exception("The employee with this username: " + principal + " not exist"));
+
+        return employee;
     }
 }
 
