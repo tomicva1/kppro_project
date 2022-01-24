@@ -108,10 +108,10 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/employees/{id}")
-    String deleteEmployee(@PathVariable Long id) {
+    void deleteEmployee(@PathVariable Long id) {
         repository.deleteById(id);
 
-        return "User has been deleted";
+        //return "User has been deleted";
     }
 
 

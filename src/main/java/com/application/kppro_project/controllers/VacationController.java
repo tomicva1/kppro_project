@@ -92,11 +92,11 @@ public class VacationController {
     }
 
     @DeleteMapping("/vacations/{id}")
-    String deleteVacation(@PathVariable Long id) {
+    void deleteVacation(@PathVariable Long id) {
 
         repository.deleteById(id);
 
-        return "Vacation has been deleted";
+        //return "Vacation has been deleted";
     }
 
     @PutMapping("/approved/{id}")

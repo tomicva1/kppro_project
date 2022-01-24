@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-
+@RestController
 public class FeedbackController {
 
     private final FeedbackRepository repository;
@@ -49,6 +49,7 @@ public class FeedbackController {
         Employee employee = (Employee) employeeRepository.findByUsername(principal)
                 .orElseThrow(() -> new NotFoundException(principal));
 
+        System.out.println(employee.getId());
         List<EntityModel<Feedback>> feedback = repository.findByEmployeeId(employee.getId()).stream().map(assembler::toModel).collect(Collectors.toList());
 
         return feedback;
@@ -91,10 +92,10 @@ public class FeedbackController {
     }
 
     @DeleteMapping("/feedbacks/{id}")
-    public String deleteFeedback(@PathVariable Long id) {
+    public void deleteFeedback(@PathVariable Long id) {
 
         repository.deleteById(id);
 
-        return "Feedback has been deleted";
+        //return "Feedback has been deleted";
     }
 }
