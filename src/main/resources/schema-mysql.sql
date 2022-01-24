@@ -41,7 +41,7 @@ CREATE TABLE `vacation` (
 create index FK6qrwq18c5kq468gvsmwm43cgp
     on vacation (update_by);
 
-create index FK6qrwq18c5kq468gvsmwm43cgp
+create index FK6qrwq18c5kq468gvsmwm44cgp
     on vacation (employee_id);
 
 DROP TABLE IF EXISTS `department`;
@@ -64,7 +64,7 @@ CREATE TABLE `feedback` (
                             employee_id int not null
 ) ENGINE=MyISAM;
 
-create index FK6qrwq18c5kq468gvsmwm43cgp
+create index FK6qrwq18c5kq468gvsmwm46cgp
     on feedback (author);
 
 create index FK6qrwq18c5kq468gvsmwm43cgp
