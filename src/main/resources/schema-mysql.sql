@@ -39,6 +39,9 @@ CREATE TABLE `vacation` (
 ) ENGINE=MyISAM;
 
 create index FK6qrwq18c5kq468gvsmwm43cgp
+    on vacation (update_by);
+
+create index FK6qrwq18c5kq468gvsmwm43cgp
     on vacation (employee_id);
 
 DROP TABLE IF EXISTS `department`;
@@ -56,8 +59,13 @@ CREATE TABLE `feedback` (
                                 primary key,
                             quality int not null,
                             note varchar(255) not null,
+                            author int not null,
+                            creation_time datetime not null,
                             employee_id int not null
 ) ENGINE=MyISAM;
+
+create index FK6qrwq18c5kq468gvsmwm43cgp
+    on feedback (author);
 
 create index FK6qrwq18c5kq468gvsmwm43cgp
     on feedback (employee_id);
@@ -84,11 +92,11 @@ VALUES
 
 INSERT INTO `feedback`
 VALUES
-(1,5, 'Work morale is scarce', 1),
-(2,1, 'Sample Employee', 2),
-(3,4, 'Effort there is, but unfortunately the result of work zero', 3),
-(4,3, 'Good average, something worked, something not.', 4),
-(5,5, 'Very below average performance', 1);
+(1,5, 'Work morale is scarce', 6, cast('2022-01-25 00:00:00' AS datetime ), 1),
+(2,1, 'Sample Employee', 6, cast('2022-01-25 00:00:00' AS datetime ), 2),
+(3,4, 'Effort there is, but unfortunately the result of work zero', 6, cast('2022-01-25 00:00:00' AS datetime ), 3),
+(4,3, 'Good average, something worked, something not.', 6, cast('2022-01-25 00:00:00' AS datetime ), 4),
+(5,5, 'Very below average performance', 6, cast('2022-01-25 00:00:00' AS datetime ), 1);
 
 INSERT INTO `vacation`
 VALUES (1, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'First vacation',0, null, null),

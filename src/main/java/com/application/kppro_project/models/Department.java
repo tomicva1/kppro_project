@@ -10,7 +10,7 @@ import java.util.Objects;
 //@Table(name = "department")
 public class Department {
 
-    private @Id @GeneratedValue Long id;
+    private @Id @GeneratedValue long id;
     private int map;
     private String description;
     private String name;
@@ -18,18 +18,18 @@ public class Department {
     public Department() {
     }
 
-    public Department(Long id, int map, String description, String name) {
+    public Department(long id, int map, String description, String name) {
         this.id = id;
         this.map = map;
         this.description = description;
         this.name = name;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

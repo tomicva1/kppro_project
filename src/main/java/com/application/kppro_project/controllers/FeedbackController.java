@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,6 +69,13 @@ public class FeedbackController {
     // end::get-aggregate-root[]
     @PostMapping("/feedbacks")
     public ResponseEntity<?> newFeedback(@RequestBody Feedback newFeedback) {
+        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Employee employee = (Employee) employeeRepository.findByUsername(principal)
+                .orElseThrow(() -> new NotFoundException(principal));
+
+        newFeedback.setAuthor(employee.getId());
+        newFeedback.setCreationTime(getActualDate());
+
         EntityModel<Feedback> entityModel = assembler.toModel(repository.save(newFeedback));
 
         return ResponseEntity //
@@ -97,5 +105,11 @@ public class FeedbackController {
         repository.deleteById(id);
 
         //return "Feedback has been deleted";
+    }
+
+    private Date getActualDate(){;
+        Date date = new Date();
+
+        return date;
     }
 }

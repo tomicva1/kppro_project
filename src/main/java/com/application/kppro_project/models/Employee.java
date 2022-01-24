@@ -17,20 +17,20 @@ import javax.persistence.Table;
 //@Table(name = "employee")
 public class Employee {
 
-    private @Id @GeneratedValue Long id;
+    private @Id @GeneratedValue long id;
     private String firstName;
     private String lastName;
     private String role;
     private String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    private Long departmentId;
+    private long departmentId;
     @JsonIgnore
     private String token;
 
     public Employee() {}
 
-    public Employee(String firstName, String lastName, String username, String role, Long departmentId) {
+    public Employee(String firstName, String lastName, String username, String role, long departmentId) {
 
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,7 +49,7 @@ public class Employee {
         this.lastName = parts[1];
     }
 
-    public Long getId() {
+    public long getId() {
         return this.id;
     }
 
@@ -65,7 +65,7 @@ public class Employee {
         return this.role;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -97,11 +97,11 @@ public class Employee {
         this.password = password;
     }
 
-    public Long getDepartmentId() {
+    public long getDepartmentId() {
         return departmentId;
     }
 
-    public void setDepartmentId(Long departmentId) {
+    public void setDepartmentId(long departmentId) {
         this.departmentId = departmentId;
     }
 
