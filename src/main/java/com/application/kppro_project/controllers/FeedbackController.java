@@ -95,26 +95,31 @@ public class FeedbackController {
 
     @PutMapping("/feedbacks/{id}")
     public Feedback replaceFeedback(@RequestBody Feedback newFeedback, @PathVariable Long id) {
+        Employee employee = getEmployee();
 
-        return repository.findById(id)
-                .map(feedback -> {
-                    feedback.setNote(newFeedback.getNote());
-                    feedback.setQuality(newFeedback.getQuality());
-                    feedback.setEmployeeId(newFeedback.getEmployeeId());
-                    return repository.save(feedback);
-                })
-                .orElseGet(() -> {
-                    newFeedback.setId(id);
-                    return repository.save(newFeedback);
-                });
+        Feedback feedback =  repository.findById(id).get();
+
+        if(feedback.getAuthor() == employee.getId()) {
+                feedback.setNote(newFeedback.getNote());
+                feedback.setQuality(newFeedback.getQuality());
+                feedback.setEmployeeId(newFeedback.getEmployeeId());
+                return repository.save(feedback);
+        }
+        else{
+            throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
+        }
     }
 
     @DeleteMapping("/feedbacks/{id}")
     public void deleteFeedback(@PathVariable Long id) {
 
-        repository.deleteById(id);
-
-        //return "Feedback has been deleted";
+        Feedback feedback = repository.findById(id).get();
+        if(feedback.getAuthor() == getEmployee().getId()) {
+            repository.deleteById(id);
+        }
+        else{
+            throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
+        }
     }
 
     private Date getActualDate(){;
@@ -131,4 +136,11 @@ public class FeedbackController {
 
         return employee;
     }
+
+    String getRole(){
+        Object[] roles = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray();
+        String role = roles[0].toString();
+        return role;
+    }
+
 }

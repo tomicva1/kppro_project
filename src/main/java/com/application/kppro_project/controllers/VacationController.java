@@ -7,7 +7,6 @@ import com.application.kppro_project.models.Employee;
 import com.application.kppro_project.models.Vacation;
 import com.application.kppro_project.models.VacationModelAssembler;
 import com.application.kppro_project.other.Exception;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,22 +55,29 @@ public class VacationController {
 
     @GetMapping("/vacations")
     public List<EntityModel<Vacation>> all() {
+        System.out.println(getRole());
+        if(!getRole().equals("ROLE_USER")) {
+            List<EntityModel<Vacation>> vacation = repository.findAll().stream() //
+                    .map(assembler::toModel) //
+                    .collect(Collectors.toList());
 
-        List<EntityModel<Vacation>> vacation = repository.findAll().stream() //
-                .map(assembler::toModel) //
-                .collect(Collectors.toList());
-
-        //return CollectionModel.of(vacation, linkTo(methodOn(VacationController.class).all()).withSelfRel());*/
-        return vacation;
+            //return CollectionModel.of(vacation, linkTo(methodOn(VacationController.class).all()).withSelfRel());*/
+            return vacation;
+        }
+        else{
+            throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
+        }
     }
 
     @PostMapping("/vacations")
     public ResponseEntity<EntityModel<Vacation>> newVacation(@RequestBody Vacation vacation) {
+
         Employee employee = getEmployee();
 
         Vacation vac = new Vacation();
         Date actualDate = getActualDate();
-        if(vac.getDateFrom().after(actualDate)) {
+        System.out.println("Role je tato " + getRole());
+        if((vacation.getDateFrom().after(actualDate) && getRole().equals("ROLE_USER")) || (getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN"))) {
             vac.setVacation(vacation);
             vac.setEmployeeId(employee.getId());
             vac.setStatus(StatusEnum.WAITING);
@@ -88,36 +94,45 @@ public class VacationController {
 
     @PutMapping("/vacations/{id}")
     public Vacation replaceVacation(@RequestBody Vacation vacation, @PathVariable Long id) {
-        Employee employee = getEmployee();
-        checkIfManager(employee);
-
-
-        return repository.findById(id)
-                .map(vac -> {
-                    vac.setVacation(vacation);
-                    return repository.save(vac);
-                }).orElseThrow(() -> new Exception());
+        if(getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN")) {
+            return repository.findById(id)
+                    .map(vac -> {
+                        vac.setVacation(vacation);
+                        return repository.save(vac);
+                    }).orElseThrow(() -> new Exception());
+        }
+        else{
+            throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
+        }
     }
 
     @DeleteMapping("/vacations/{id}")
     @ResponseStatus(HttpStatus.OK)
     void deleteVacation(@PathVariable Long id) {
-        Employee employee = getEmployee();
-        checkIfManager(employee);
+        Vacation vac = repository.findById(id).get();
+        if((getRole().equals("ROLE_USER") && vac.getStatus() == StatusEnum.WAITING) || (getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN"))) {
+            repository.deleteById(id);
 
-        repository.deleteById(id);
-
-        //return "Vacation has been deleted";
+            //return "Vacation has been deleted";
+        }
+        else{
+            throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
+        }
     }
 
     @PutMapping("/approved/{id}")
     public Vacation approveVacation(@RequestParam StatusEnum status, @RequestParam Long updatedBy, @PathVariable Long id){
-        return repository.findById(id).map(vac -> {
-            vac.setId(id);
-            vac.setApprove(status, updatedBy, getActualDate());
+        if(getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN")) {
 
-            return repository.save(vac);
-        }).orElseThrow(() -> new Exception());
+            return repository.findById(id).map(vac -> {
+                vac.setId(id);
+                vac.setApprove(status, updatedBy, getActualDate());
+                return repository.save(vac);
+            }).orElseThrow(() -> new Exception());
+        }
+        else{
+            throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
+        }
     }
 
 
@@ -128,11 +143,11 @@ public class VacationController {
         return date;
     }
 
-    void checkIfManager(Employee employee){
+    /*void checkIfManager(Employee employee){
         if(employee.getRole() != "MANAGER"){
             throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED);
         }
-    }
+    }*/
 
     Employee getEmployee(){
         String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
@@ -141,6 +156,12 @@ public class VacationController {
         //.orElseThrow(() -> new Exception("The employee with this username: " + principal + " not exist"));
 
         return employee;
+    }
+
+    String getRole(){
+        Object[] roles = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray();
+        String role = roles[0].toString();
+        return role;
     }
 }
 

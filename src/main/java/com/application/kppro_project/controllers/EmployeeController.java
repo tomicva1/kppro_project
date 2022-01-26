@@ -118,8 +118,7 @@ public class EmployeeController {
 
     private static List<String> getJWTToken(String username) {
         String secretKey = "mySecretKey";
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList("ROLE_USER");
+        List<GrantedAuthority> grantedAuthorities = (List<GrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 
         Date expiration = new Date(System.currentTimeMillis() + 600000);
 
