@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,27 +39,23 @@ public class EmployeeController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody Employee body) {
-        Employee employee = (Employee) repository.findByUsername(body.getUsername()) //
+    public String login() {
+        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+
+        Employee employee = (Employee) repository.findByUsername(principal) //
                 .orElseThrow(() -> new Exception());
-        //.orElseThrow(() -> new Exception("The employee with this username: " + body.getUsername() + " not exist"));
-
-        boolean login = pwdMatch(employee.getPassword(), body.getPassword());
-        if(login) {
-            List<String> response = getJWTToken(body.getUsername());
-            String token = response.get(0);
-            String expiration = response.get(1);
-            Employee user = employee;
-            user.setToken(token);
 
 
-            repository.save(user);
+        System.out.println("Principal: " + principal);
 
-            return user.toStringLogin(expiration);
-        }
-        else{
-            throw new Exception("Wrong password");
-        }
+        List<String> response = getJWTToken(principal);
+        String token = response.get(0);
+        String expiration = response.get(1);
+
+        employee.setToken(token);
+
+        repository.save(employee);
+        return employee.toStringLogin(expiration);
     }
 
     // Aggregate root
