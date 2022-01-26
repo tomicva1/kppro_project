@@ -13,19 +13,19 @@ import java.util.Objects;
 //@Table(name = "vacation")
 public class Vacation {
 
-    private @Id @GeneratedValue long id;
-    private long employeeId;
+    private @Id @GeneratedValue Long id;
+    private Long employeeId;
     private Date dateFrom;
     private Date dateTo;
     private String note;
     private StatusEnum status;
-    private long updateBy;
+    private Long updateBy;
     private Date updateTime;
 
     public Vacation() {
     }
 
-    public Vacation(long id, long employeeId, Date dateFrom, Date dateTo, String note, StatusEnum status) {
+    public Vacation(Long id, Long employeeId, Date dateFrom, Date dateTo, String note, StatusEnum status) {
         this.id = id;
         this.employeeId = employeeId;
         this.dateFrom = dateFrom;
@@ -34,24 +34,24 @@ public class Vacation {
         this.status = status;
     }
 
-    public Vacation(long id, StatusEnum status, long updateBy, Date updateTime) {
+    public Vacation(Long id, StatusEnum status, Long updateBy, Date updateTime) {
         this.id = id;
         this.status = status;
         this.updateBy = updateBy;
         this.updateTime = updateTime;
     }
 
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(long id) { this.id = id; }
+    public void setId(Long id) { this.id = id; }
 
-    public long getEmployeeId() {
+    public Long getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(long employeeId) {
+    public void setEmployeeId(Long employeeId) {
         this.employeeId = employeeId;
     }
 
@@ -87,11 +87,11 @@ public class Vacation {
         this.status = status;
     }
 
-    public long getUpdatedBy() {
+    public Long getUpdatedBy() {
         return updateBy;
     }
 
-    public void setUpdatedBy(long updateBy) {
+    public void setUpdatedBy(Long updateBy) {
         this.updateBy = updateBy;
     }
 
@@ -111,7 +111,7 @@ public class Vacation {
         this.status = vacation.status;
     }
 
-    public void setApprove(StatusEnum status, long updateBy, Date updateTime){
+    public void setApprove(StatusEnum status, Long updateBy, Date updateTime){
         this.status = status;
         this.updateBy = updateBy;
         this.updateTime = updateTime;

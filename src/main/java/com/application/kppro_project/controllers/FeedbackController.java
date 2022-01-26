@@ -9,6 +9,8 @@ import com.application.kppro_project.models.Vacation;
 import com.application.kppro_project.other.Exception;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.HttpMessage;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -53,12 +55,19 @@ public class FeedbackController {
         return feedback;
     }
 
+    @GetMapping("employees/{id}/feedbacks")
+    public List<EntityModel<Feedback>> hisFeedbacks(@PathVariable Long id) {
+        List<EntityModel<Feedback>> feedback = repository.findByEmployeeId(id).stream().map(assembler::toModel).collect(Collectors.toList());
+
+        return feedback;
+    }
+
 
     @GetMapping("/feedbacks/{id}")
     public EntityModel<Feedback> one(@PathVariable Long id) {
 
         Feedback feedback = repository.findById(id) //
-                .orElseThrow(() -> new Exception());
+                .orElseThrow(() -> new Exception(HttpStatus.NOT_FOUND));
         //.orElseThrow(() -> new Exception("Feedback with this id: " + id + " not exist"));
 
         return assembler.toModel(feedback);
@@ -69,14 +78,19 @@ public class FeedbackController {
     public ResponseEntity<?> newFeedback(@RequestBody Feedback newFeedback) {
         Employee employee = getEmployee();
 
-        newFeedback.setAuthor(employee.getId());
-        newFeedback.setCreationTime(getActualDate());
+        if(employee.getId() != newFeedback.getEmployeeId()) {
+            newFeedback.setAuthor(employee.getId());
+            newFeedback.setCreationTime(getActualDate());
 
-        EntityModel<Feedback> entityModel = assembler.toModel(repository.save(newFeedback));
+            EntityModel<Feedback> entityModel = assembler.toModel(repository.save(newFeedback));
 
-        return ResponseEntity //
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-                .body(entityModel);
+            return ResponseEntity //
+                    .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
+                    .body(entityModel);
+        }
+        else{
+            throw new Exception(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/feedbacks/{id}")

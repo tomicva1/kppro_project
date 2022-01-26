@@ -70,14 +70,20 @@ public class VacationController {
         Employee employee = getEmployee();
 
         Vacation vac = new Vacation();
-        vac.setVacation(vacation);
-        vac.setEmployeeId(employee.getId());
-        vac.setStatus(StatusEnum.WAITING);
-        Vacation newVacation = repository.save(vac);
+        Date actualDate = getActualDate();
+        if(vac.getDateFrom().after(actualDate)) {
+            vac.setVacation(vacation);
+            vac.setEmployeeId(employee.getId());
+            vac.setStatus(StatusEnum.WAITING);
+            Vacation newVacation = repository.save(vac);
 
-        return ResponseEntity //
-                .created(linkTo(methodOn(VacationController.class).one(newVacation.getId())).toUri()) //
-                .body(assembler.toModel(newVacation));
+            return ResponseEntity //
+                    .created(linkTo(methodOn(VacationController.class).one(newVacation.getId())).toUri()) //
+                    .body(assembler.toModel(newVacation));
+        }
+        else{
+            throw new Exception(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/vacations/{id}")

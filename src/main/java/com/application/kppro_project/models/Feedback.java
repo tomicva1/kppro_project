@@ -11,17 +11,17 @@ import java.util.Objects;
 //@Table(name = "feedback")
 public class Feedback {
 
-    private @Id @GeneratedValue long id;
+    private @Id @GeneratedValue Long id;
     private int quality;
     private String note;
-    private long author;
+    private Long author;
     private Date creationTime;
-    private long employeeId;
+    private Long employeeId;
 
     public Feedback() {
     }
 
-    public Feedback(long id, int quality, String note, long author, Date creationTime, long employeeId) {
+    public Feedback(Long id, int quality, String note, Long author, Date creationTime, Long employeeId) {
         this.id = id;
         this.quality = quality;
         this.note = note;
@@ -30,11 +30,11 @@ public class Feedback {
         this.employeeId = employeeId;
     }
 
-    public long getAuthor() {
+    public Long getAuthor() {
         return author;
     }
 
-    public void setAuthor(long author) {
+    public void setAuthor(Long author) {
         this.author = author;
     }
 
@@ -46,11 +46,11 @@ public class Feedback {
         this.creationTime = creationTime;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -70,11 +70,11 @@ public class Feedback {
         this.note = note;
     }
 
-    public long getEmployeeId() {
+    public Long getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(long employeeId) {
+    public void setEmployeeId(Long employeeId) {
         this.employeeId = employeeId;
     }
 

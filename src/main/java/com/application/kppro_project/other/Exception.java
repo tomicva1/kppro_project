@@ -9,7 +9,7 @@ public class Exception extends ResponseStatusException {
         super(HttpStatus.NOT_FOUND);
     }
 
-    public Exception(String e){
-        super(HttpStatus.UNAUTHORIZED);
+    public Exception(HttpStatus status){
+        super(status);
     }
 }
