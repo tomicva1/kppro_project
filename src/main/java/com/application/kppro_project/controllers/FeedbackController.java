@@ -102,7 +102,8 @@ public class FeedbackController {
         if(feedback.getAuthor() == employee.getId()) {
                 feedback.setNote(newFeedback.getNote());
                 feedback.setQuality(newFeedback.getQuality());
-                feedback.setEmployeeId(newFeedback.getEmployeeId());
+                if(newFeedback.getEmployeeId() != null)
+                    feedback.setEmployeeId(newFeedback.getEmployeeId());
                 return repository.save(feedback);
         }
         else{
