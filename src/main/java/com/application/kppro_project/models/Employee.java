@@ -27,6 +27,8 @@ public class Employee {
     private Long departmentId;
     @JsonIgnore
     private String token;
+    private String email;
+    private String mobile;
 
     public Employee() {}
 
@@ -105,23 +107,20 @@ public class Employee {
         this.departmentId = departmentId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return Objects.equals(id, employee.id) &&
-                Objects.equals(firstName, employee.firstName) &&
-                Objects.equals(lastName, employee.lastName) &&
-                Objects.equals(role, employee.role) &&
-                Objects.equals(username, employee.username) &&
-                Objects.equals(password, employee.password) &&
-                Objects.equals(departmentId, employee.departmentId);
+    public String getEmail() {
+        return email;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, role, username, password, departmentId);
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     @Override
@@ -133,7 +132,10 @@ public class Employee {
                 ", role='" + role + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", departmentId='" + departmentId + '\'' +
+                ", departmentId=" + departmentId +
+                ", token='" + token + '\'' +
+                ", email='" + email + '\'' +
+                ", mobile='" + mobile + '\'' +
                 '}';
     }
 

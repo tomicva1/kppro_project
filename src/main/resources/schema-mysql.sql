@@ -22,7 +22,9 @@ CREATE TABLE `employee` (
                             role varchar(255) not null,
                             username varchar(255) not null,
                             department_id int not null,
-                            token varchar(255) null
+                            token varchar(255) null,
+                            email varchar(255) null,
+                            mobile int null
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS `vacation`;
@@ -83,12 +85,13 @@ VALUES
 
 INSERT INTO `employee`
 VALUES
-(1,'John', 'Nowak', '$2a$10$h7B0/27moSbdj47MAjH0iuJDrit6eJARN7ff9nHDJ6umUooauHYn6','USER','user1', 1, ''),
-(2,'Peter', 'Lesser','$2a$10$h7B0/27moSbdj47MAjH0iuJDrit6eJARN7ff9nHDJ6umUooauHYn6','USER','user2', 1, ''),
-(3,'Bob', 'Smith','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user3', 2, ''),
-(4,'Barack', 'Obama','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user4', 2, ''),
-(5,'Jonnathan', 'Plane','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user5', 2, ''),
-(6,'Nyguen', 'Juges','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','MANAGER','manager1', 1, '');
+(1,'John', 'Nowak', '$2a$10$h7B0/27moSbdj47MAjH0iuJDrit6eJARN7ff9nHDJ6umUooauHYn6','USER','user1', 1, '', 'test@seznam.cz', 123456789),
+(2,'Peter', 'Lesser','$2a$10$h7B0/27moSbdj47MAjH0iuJDrit6eJARN7ff9nHDJ6umUooauHYn6','USER','user2', 1, '', 'test@seznam.cz', 123456789),
+(3,'Bob', 'Smith','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user3', 2, '', 'test@seznam.cz', 123456789),
+(4,'Barack', 'Obama','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user4', 2, '', 'test@seznam.cz', 123456789),
+(5,'Jonnathan', 'Plane','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','USER','user5', 2, '', 'test@seznam.cz', 123456789),
+(6,'Nyguen', 'Juges','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','MANAGER','manager1', 1, '', 'test@seznam.cz', 123456789),
+(7,'Johanson', 'Carl','$2a$12$DT1PviXFiw889rX4OITUKeyAvCWrzqRDTBf9Gp63cv6Ap1X2YrY9W','ADMIN','admin', 1, '', 'test@seznam.cz', 123456789);
 
 INSERT INTO `feedback`
 VALUES

@@ -143,12 +143,6 @@ public class VacationController {
         return date;
     }
 
-    /*void checkIfManager(Employee employee){
-        if(employee.getRole() != "MANAGER"){
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED);
-        }
-    }*/
-
     Employee getEmployee(){
         String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Employee employee = (Employee) employeeRepository.findByUsername(principal)
