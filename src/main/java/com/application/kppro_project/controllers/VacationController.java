@@ -56,27 +56,26 @@ public class VacationController {
     @GetMapping("/vacations")
     public List<EntityModel<Vacation>> all() {
         System.out.println(getRole());
-        if(!getRole().equals("ROLE_USER")) {
+        //if(!getRole().equals("ROLE_USER")) {
             List<EntityModel<Vacation>> vacation = repository.findAll().stream() //
                     .map(assembler::toModel) //
                     .collect(Collectors.toList());
 
             //return CollectionModel.of(vacation, linkTo(methodOn(VacationController.class).all()).withSelfRel());*/
             return vacation;
-        }
+        /*}
         else{
             throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
-        }
+        }*/
     }
 
     @PostMapping("/vacations")
     public ResponseEntity<EntityModel<Vacation>> newVacation(@RequestBody Vacation vacation) {
-
         Employee employee = getEmployee();
 
         Vacation vac = new Vacation();
         Date actualDate = getActualDate();
-        System.out.println("Role je tato " + getRole());
+
         if((vacation.getDateFrom().after(actualDate) && getRole().equals("ROLE_USER")) || (getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN"))) {
             vac.setVacation(vacation);
             vac.setEmployeeId(employee.getId());
@@ -94,12 +93,20 @@ public class VacationController {
 
     @PutMapping("/vacations/{id}")
     public Vacation replaceVacation(@RequestBody Vacation vacation, @PathVariable Long id) {
-        if(getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN")) {
-            return repository.findById(id)
-                    .map(vac -> {
-                        vac.setVacation(vacation);
-                        return repository.save(vac);
-                    }).orElseThrow(() -> new Exception());
+        Employee employee = getEmployee();
+        Vacation vac = repository.findById(vacation.getId()).get();
+
+        if(vac.getStatus() == StatusEnum.WAITING && vacation.getStatus() == StatusEnum.WAITING &&
+                (employee.getRole().equals("ROLE_USER") && vacation.getDateFrom().after(getActualDate()) ||
+                        !employee.getRole().equals("ROLE_USER")))
+        {
+            return repository.save(vacation);
+        }
+        else if((getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN")) && vacation.getStatus() != StatusEnum.WAITING) {
+            vac.setVacation(vacation);
+            vac.setUpdatedBy(employee.getId());
+            vac.setUpdateTime(getActualDate());
+            return repository.save(vac);
         }
         else{
             throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
@@ -107,7 +114,6 @@ public class VacationController {
     }
 
     @DeleteMapping("/vacations/{id}")
-    @ResponseStatus(HttpStatus.OK)
     void deleteVacation(@PathVariable Long id) {
         Vacation vac = repository.findById(id).get();
         if((getRole().equals("ROLE_USER") && vac.getStatus() == StatusEnum.WAITING) || (getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN"))) {
@@ -120,22 +126,20 @@ public class VacationController {
         }
     }
 
-    @PutMapping("/approved/{id}")
-    public Vacation approveVacation(@RequestParam StatusEnum status, @RequestParam Long updatedBy, @PathVariable Long id){
+    /*@PutMapping("/approved/{id}")
+    public Vacation approveVacation(@RequestParam StatusEnum status, @PathVariable Long id){
         if(getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN")) {
-
+            Employee employee = getEmployee();
             return repository.findById(id).map(vac -> {
                 vac.setId(id);
-                vac.setApprove(status, updatedBy, getActualDate());
+                vac.setApprove(status, employee.getId(), getActualDate());
                 return repository.save(vac);
             }).orElseThrow(() -> new Exception());
         }
         else{
             throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
         }
-    }
-
-
+    }*/
 
     private Date getActualDate(){;
         Date date = new Date();

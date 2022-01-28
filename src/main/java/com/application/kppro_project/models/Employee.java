@@ -145,7 +145,7 @@ public class Employee {
 
     public String toStringLogin(String expiration){
         return '{' +
-                "\"userId\":\"" + id + '"' +
+                "\"userId\":" + id +
                 ", \"token\":\"" + token + '"' +
                 ", \"expiration\":\"" + expiration + '"' +
                 '}';
