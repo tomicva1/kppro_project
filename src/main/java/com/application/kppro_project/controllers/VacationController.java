@@ -71,6 +71,9 @@ public class VacationController {
 
     @PostMapping("/vacations")
     public ResponseEntity<EntityModel<Vacation>> newVacation(@RequestBody Vacation vacation) {
+        Long newDate = vacation.getDateFrom().getTime() + ((1000 * 60 * 60 * 23)-1);
+        vacation.setDateFrom(new Date(newDate));
+
         Employee employee = getEmployee();
 
         Vacation vac = new Vacation();
@@ -93,6 +96,9 @@ public class VacationController {
 
     @PutMapping("/vacations/{id}")
     public Vacation replaceVacation(@RequestBody Vacation vacation, @PathVariable Long id) {
+        Long newDate = vacation.getDateFrom().getTime() + ((1000 * 60 * 60 * 23)-1);
+        vacation.setDateFrom(new Date(newDate));
+
         Employee employee = getEmployee();
         Vacation vac = repository.findById(vacation.getId()).get();
 
