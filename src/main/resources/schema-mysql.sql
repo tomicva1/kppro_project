@@ -102,7 +102,7 @@ VALUES
 (5,5, 'Very below average performance', 6, cast('2022-01-25 00:00:00' AS datetime ), 1);
 
 INSERT INTO `vacation`
-VALUES (1, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'First vacation',0, null, null),
+VALUES (1, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'First vacation',1, 6, cast('2022-01-31 00:00:00' AS datetime )),
        (2, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Second vacation',0, null, null),
        (3, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Third vacation',0, null, null),
        (4, 1, cast('2022-01-26 00:00:00' AS datetime ), cast('2022-01-31 00:00:00' AS datetime ),'Fouth vacation',0, null, null),
