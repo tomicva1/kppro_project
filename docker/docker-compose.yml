@@ -7,7 +7,7 @@ services:
     image: mariadb:latest
     container_name: kppro-db
     ports:
-      - "3307:3306"
+      - "3306:3306"
     environment:
       MYSQL_DATABASE: kppro_dovolena
       MYSQL_USER: root
