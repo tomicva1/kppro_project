@@ -15,6 +15,7 @@
     <description>Project on KPPRO</description>
     <properties>
         <java.version>11</java.version>
+        <start-class>com.application.kppro_project.KpproProjectApplication</start-class>
     </properties>
 
     <dependencies>
