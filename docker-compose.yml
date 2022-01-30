@@ -2,25 +2,27 @@ version: '3.8'
 
 # Define services
 services:
+
   # Database Service (MariaDB)
   database:
     image: mariadb:latest
     container_name: kppro-db
     ports:
-      - "3306:3306"
-    restart: always
+      - "3307:3306"
     environment:
       MYSQL_DATABASE: kppro_dovolena
-      MYSQL_USER: root
-      MYSQL_PASSWORD: rootpasswd
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: adminpasswd
       MYSQL_ROOT_PASSWORD: rootpasswd
     networks:
       - main-network
     volumes:
       - ./maria:/docker-entrypoint-initdb.d
+
+
   openjdk:
     container_name: kppro-jdk
-    build: ./openjdk/
+    build: .
     depends_on:
       - database
     ports:
