@@ -6,4 +6,7 @@ In terminal set docker:
 docker-compose build
 docker-compose up
 
-Then simply start project
+Then you have to set mariaDB
+host: localhost
+username: root
+password: my-secret-pw
