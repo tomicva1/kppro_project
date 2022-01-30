@@ -1,99 +1,146 @@
 package com.application.kppro_project.models;
 
-import jdk.jfr.BooleanFlag;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.application.kppro_project.enums.StatusEnum;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Date;
+import java.util.Objects;
 
 @Entity
-@Table(name = "vacation")
-public class Vacation extends BaseEntity{
+//@Table(name = "vacation")
+public class Vacation {
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
+    private @Id @GeneratedValue Long id;
+    private Long employeeId;
+    private Date dateFrom;
+    private Date dateTo;
+    private String note;
+    private StatusEnum status;
+    private Long updateBy;
+    private Date updateTime;
 
-    @Column(name = "start_date")
-    @NotNull(message = "Set start date")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDate startDate;
-
-    @Column(name = "end_date")
-    @NotNull(message = "Set End date")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDate endDate;
-
-    @Column(name = "approved")
-    @NotNull(message = "Set approval state")
-    private Boolean approvalState;
-
-    @Column(name = "approvedBy")
-    private Employee manager;
-
-    @Column(name = "approval_time")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDate approvalTime;
-
-    public Vacation(){
-
+    public Vacation() {
     }
 
-    public Vacation(Employee employee, @NotNull(message = "Set start date") LocalDate startDate, @NotNull(message = "Set End date") LocalDate endDate, @NotNull(message = "Set approval state") Boolean approvalState, Employee manager, LocalDate approvalTime) {
-        this.employee = employee;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.approvalState = approvalState;
-        this.manager = manager;
-        this.approvalTime = approvalTime;
+    public Vacation(Long id, Long employeeId, Date dateFrom, Date dateTo, String note, StatusEnum status) {
+        this.id = id;
+        this.employeeId = employeeId;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+        this.note = note;
+        this.status = status;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public Vacation(Long id, StatusEnum status, Long updateBy, Date updateTime) {
+        this.id = id;
+        this.status = status;
+        this.updateBy = updateBy;
+        this.updateTime = updateTime;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public Long getId() {
+        return this.id;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public void setId(Long id) { this.id = id; }
+
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public Date getDateFrom() {
+        return dateFrom;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
     }
 
-    public Boolean getApprovalState() {
-        return approvalState;
+    public Date getDateTo() {
+        return dateTo;
     }
 
-    public void setApprovalState(Boolean approvalState) {
-        this.approvalState = approvalState;
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
     }
 
-    public Employee getManager() {
-        return manager;
+    public String getNote() {
+        return note;
     }
 
-    public void setManager(Employee manager) {
-        this.manager = manager;
+    public void setNote(String note) {
+        this.note = note;
     }
 
-    public LocalDate getApprovalTime() {
-        return approvalTime;
+    public StatusEnum getStatus() {
+        return status;
     }
 
-    public void setApprovalTime(LocalDate approvalTime) {
-        this.approvalTime = approvalTime;
+    public void setStatus(StatusEnum status) {
+        this.status = status;
+    }
+
+    public Long getUpdatedBy() {
+        return updateBy;
+    }
+
+    public void setUpdatedBy(Long updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public void setVacation(Vacation vacation) {
+        this.employeeId = vacation.getEmployeeId();
+        this.dateFrom = vacation.getDateFrom();
+        this.dateTo = vacation.getDateTo();
+        this.note = vacation.getNote();
+        this.status = vacation.status;
+    }
+
+    public void setApprove(StatusEnum status, Long updateBy, Date updateTime){
+        this.status = status;
+        this.updateBy = updateBy;
+        this.updateTime = updateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vacation vacation = (Vacation) o;
+        return status == vacation.status &&
+                Objects.equals(id, vacation.id) &&
+                Objects.equals(employeeId, vacation.employeeId) &&
+                Objects.equals(dateFrom, vacation.dateFrom) &&
+                Objects.equals(dateTo, vacation.dateTo) &&
+                Objects.equals(note, vacation.note) &&
+                Objects.equals(updateBy, vacation.updateBy) &&
+                Objects.equals(updateTime, vacation.updateTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, employeeId, dateFrom, dateTo, note, status, updateBy, updateTime);
+    }
+
+    @Override
+    public String toString() {
+        return "Vacation{" + "id=" + this.id + ", employeeId='" + this.employeeId + '\'' + ", dateFrom='" + this.dateFrom
+                + '\'' + ", dateTo='" + this.dateTo + '\'' + ", status='" + this.status + '\'' + ", updateBy='" + this.updateBy
+                + '\'' + ", updateTime='" + this.updateTime + '\'' + ", note='" + this.note + '\'' + '}';
     }
 }

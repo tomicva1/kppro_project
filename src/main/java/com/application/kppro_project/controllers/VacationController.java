@@ -1,73 +1,171 @@
 package com.application.kppro_project.controllers;
 
-import com.application.kppro_project.configurations.MyUser;
+import com.application.kppro_project.dao.EmployeeRepository;
+import com.application.kppro_project.dao.VacationRepository;
+import com.application.kppro_project.enums.StatusEnum;
 import com.application.kppro_project.models.Employee;
 import com.application.kppro_project.models.Vacation;
-import com.application.kppro_project.services.UserService;
-import com.application.kppro_project.services.VacationService;
-import com.sun.xml.bind.v2.TODO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.application.kppro_project.models.VacationModelAssembler;
+import com.application.kppro_project.other.Exception;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.Valid;
-import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Controller
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+@RestController
 public class VacationController {
-    @Autowired
-    private VacationService vacationService;
 
-    @Autowired
-    private UserService userService;
+    private final VacationRepository repository;
+    private final VacationModelAssembler assembler;
+    private final EmployeeRepository employeeRepository;
 
-    private String message = "";
-
-    @GetMapping(value = "/user/vacationRequest")
-    public String showAddVacation(Model model){
-        Vacation vacation = new Vacation();
-        model.addAttribute("vacation", vacation);
-        populateWithData(model);
-        return "user/vacationRequest";
+    public VacationController(VacationRepository repository, VacationModelAssembler assembler, EmployeeRepository employeeRepository) {
+        this.repository = repository;
+        this.assembler = assembler;
+        this.employeeRepository = employeeRepository;
     }
 
-    @GetMapping(value = "/allVacation")
-    public String showAllVacation(Model model){
+    @GetMapping("/vacations/emp")
+    public List<EntityModel<Vacation>> myVacations() {
+        Employee employee = getEmployee();
 
-        Object employee = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        MyUser employeeDetail = MyUser.class.cast(employee);
-        Collection<Vacation> vacation = vacationService.findAllVacationForEmployee(employeeDetail.getId());
-        model.addAttribute("vacationList", vacation);
-        return "allVacation";
+        List<EntityModel<Vacation>> vacation = repository.findByEmployeeId(employee.getId()).stream().map(assembler::toModel).collect(Collectors.toList());
+
+        return vacation;
     }
 
-    @RequestMapping(value = "/user/deleteVacation/{id}")
-    public String deleteVacation(@PathVariable(name = "id") int id) {
-        vacationService.deleteVacation(id);
-        message = "Dovolená byla smazána";
-        return "redirect:/allVacation";
+    @GetMapping("/vacations/{id}")
+    public EntityModel<Vacation> one(@PathVariable Long id) {
+
+        Vacation vacation = repository.findById(id) //
+                .orElseThrow(() -> new Exception());
+        //.orElseThrow(() -> new Exception("Vacation with this id: " + id + " not exist"));
+
+        return assembler.toModel(vacation);
     }
 
-    @RequestMapping(value = "/user/saveVacation", method = RequestMethod.POST)
-    public String saveVacation(@Valid @ModelAttribute("vacation") Vacation vacation, BindingResult bindingResult, Model model) {
-        /*if(!vacationService.isUnique(vacation.getStartDate())){
-            FieldError error = new FieldError("addDomain", "name",
-                    "Domain name already exists");
-            bindingResult.addError(error);
+    @GetMapping("/vacations")
+    public List<EntityModel<Vacation>> all() {
+        System.out.println(getRole());
+        //if(!getRole().equals("ROLE_USER")) {
+            List<EntityModel<Vacation>> vacation = repository.findAll().stream() //
+                    .map(assembler::toModel) //
+                    .collect(Collectors.toList());
+
+            //return CollectionModel.of(vacation, linkTo(methodOn(VacationController.class).all()).withSelfRel());*/
+            return vacation;
+        /*}
+        else{
+            throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
         }*/
-        //TODO porovnat zda nějaká dovlená aspoŇ částečně nepokrývá stejný datum..
-
-        vacationService.saveVacation(vacation);
-        message = "Dovolená zadána";
-        return "redirect:/allVacation";
     }
 
-    private void populateWithData(Model model){
-        Collection<Employee> employee = userService.findAllEmployees();
-        model.addAttribute("employee", employee);
+    @PostMapping("/vacations")
+    public ResponseEntity<EntityModel<Vacation>> newVacation(@RequestBody Vacation vacation) {
+        Long newDate = vacation.getDateFrom().getTime() + ((1000 * 60 * 60 * 23)-1);
+        vacation.setDateFrom(new Date(newDate));
+
+        Employee employee = getEmployee();
+
+        Vacation vac = new Vacation();
+        Date actualDate = getActualDate();
+
+        if((vacation.getDateFrom().after(actualDate) && getRole().equals("ROLE_USER")) || (getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN"))) {
+            vac.setVacation(vacation);
+            vac.setEmployeeId(employee.getId());
+            vac.setStatus(StatusEnum.WAITING);
+            Vacation newVacation = repository.save(vac);
+
+            return ResponseEntity //
+                    .created(linkTo(methodOn(VacationController.class).one(newVacation.getId())).toUri()) //
+                    .body(assembler.toModel(newVacation));
+        }
+        else{
+            throw new Exception(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/vacations/{id}")
+    public Vacation replaceVacation(@RequestBody Vacation vacation, @PathVariable Long id) {
+        Long newDate = vacation.getDateFrom().getTime() + ((1000 * 60 * 60 * 23)-1);
+        vacation.setDateFrom(new Date(newDate));
+
+        Employee employee = getEmployee();
+        Vacation vac = repository.findById(vacation.getId()).get();
+
+        if(vac.getStatus() == StatusEnum.WAITING && vacation.getStatus() == StatusEnum.WAITING &&
+                (employee.getRole().equals("ROLE_USER") && vacation.getDateFrom().after(getActualDate()) ||
+                        !employee.getRole().equals("ROLE_USER")))
+        {
+            return repository.save(vacation);
+        }
+        else if((getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN")) && vacation.getStatus() != StatusEnum.WAITING) {
+            vac.setVacation(vacation);
+            vac.setUpdatedBy(employee.getId());
+            vac.setUpdateTime(getActualDate());
+            return repository.save(vac);
+        }
+        else{
+            throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
+        }
+    }
+
+    @DeleteMapping("/vacations/{id}")
+    void deleteVacation(@PathVariable Long id) {
+        Vacation vac = repository.findById(id).get();
+        if((getRole().equals("ROLE_USER") && vac.getStatus() == StatusEnum.WAITING) || (getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN"))) {
+            repository.deleteById(id);
+
+            //return "Vacation has been deleted";
+        }
+        else{
+            throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
+        }
+    }
+
+    /*@PutMapping("/approved/{id}")
+    public Vacation approveVacation(@RequestParam StatusEnum status, @PathVariable Long id){
+        if(getRole().equals("ROLE_MANAGER") || getRole().equals("ROLE_ADMIN")) {
+            Employee employee = getEmployee();
+            return repository.findById(id).map(vac -> {
+                vac.setId(id);
+                vac.setApprove(status, employee.getId(), getActualDate());
+                return repository.save(vac);
+            }).orElseThrow(() -> new Exception());
+        }
+        else{
+            throw new Exception(HttpStatus.METHOD_NOT_ALLOWED);
+        }
+    }*/
+
+    private Date getActualDate(){;
+        Date date = new Date();
+
+        return date;
+    }
+
+    Employee getEmployee(){
+        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Employee employee = (Employee) employeeRepository.findByUsername(principal)
+                .orElseThrow(() -> new Exception());
+        //.orElseThrow(() -> new Exception("The employee with this username: " + principal + " not exist"));
+
+        return employee;
+    }
+
+    String getRole(){
+        Object[] roles = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray();
+        String role = roles[0].toString();
+        return role;
     }
 }
+

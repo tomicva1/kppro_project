@@ -1,0 +1,19 @@
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+
+version: '3.8'
+
+# Define services
+services:
+  # Database Service (MariaDB)
+  database:
+    image: mariadb:latest
+    container_name: mariaDB
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: kppro_dovolena
+      MYSQL_USER: user
+      MYSQL_PASSWORD: my-secret-pw
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+
