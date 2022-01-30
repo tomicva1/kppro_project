@@ -15,6 +15,7 @@
     <description>Project on KPPRO</description>
     <properties>
         <java.version>11</java.version>
+        <start-class>com.application.kppro_project.KpproProjectApplication</start-class>
     </properties>
 
     <dependencies>
@@ -127,6 +128,13 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
         </plugins>
